@@ -4,6 +4,9 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 from extensions import db,migrate
 import os
+from server.routes.donation_request import donation_requests_bp
+
+
 
 load_dotenv()
 
@@ -17,6 +20,6 @@ def create_app():
     migrate.init_app(app,db)
 
 
-
+    app.register_blueprint(donation_requests_bp)
     return app
 

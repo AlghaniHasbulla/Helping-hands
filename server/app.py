@@ -33,6 +33,10 @@ def create_app(testing=False):
     migrate.init_app(app, db)
     jwt.init_app(app)
 
+    @app.route('/')
+    def home():
+        return {"message":"Welcome to helping hands api "}
+
     app.register_blueprint(donation_requests_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(profile_bp, url_prefix="/api")

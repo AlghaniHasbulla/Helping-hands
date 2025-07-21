@@ -6,6 +6,7 @@ from server.routes.donation_request import donation_requests_bp
 from server.routes.auth_routes import auth_bp
 from server.routes.donations import donations_bp
 from server.routes.profile_routes import profile_bp
+from server.routes.admin_categories import admin_bp
 
 
 
@@ -25,5 +26,6 @@ def create_app():
     app.register_blueprint(auth_bp,url_prefix='/auth')
     app.register_blueprint(profile_bp, url_prefix="/api")
     app.register_blueprint(donations_bp)
+    app.register_blueprint(admin_bp)
     return app
 

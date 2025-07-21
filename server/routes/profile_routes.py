@@ -1,8 +1,9 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models.user import User
+from server.models.user import User
 from services.cloudinary_service import upload_image
 from app import db
+
 
 profile_bp = Blueprint('profile', __name__)
 

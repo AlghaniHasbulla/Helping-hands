@@ -12,6 +12,7 @@ python-dotenv = "*"
 psycopg2-binary = "*"
 sqlalchemy-serializer = "*"
 flask-jwt-extended = "*"
+flask-bcrypt = "*"
 
 [dev-packages]
 

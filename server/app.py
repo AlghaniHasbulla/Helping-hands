@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from extensions import db,migrate
 import os
 from server.routes.donation_request import donation_requests_bp
-
+from server.routes.donations import donations_bp
 
 
 load_dotenv()
@@ -21,5 +21,6 @@ def create_app():
 
 
     app.register_blueprint(donation_requests_bp)
+    app.register_blueprint(donations_bp)
     return app
 

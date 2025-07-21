@@ -5,6 +5,7 @@ from flask import request
 from server.models.donation_request import DonationRequest
 from server.models.user import User
 from server.extensions import db
+from server.utils.helpers import paginate
 
 # Create blueprint
 donation_requests_bp = Blueprint('donation_requests', __name__)
@@ -41,8 +42,13 @@ class DonationRequestListResource(Resource):
 
     @jwt_required()
     def get(self):
-        requests = DonationRequest.query.filter_by(is_approved=True).all()
-        return [r.to_dict() for r in requests], 200
+        page = int(request.args.get('page', 1))
+        limit = int(request.args.get('limit', 10))
+
+        query = DonationRequest.query.filter_by(is_approved=True)
+        paginated = paginate(query, page, limit)
+
+        return paginated, 200 
 
 
 class DonationRequestApprovalResource(Resource):

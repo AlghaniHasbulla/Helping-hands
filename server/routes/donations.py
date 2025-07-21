@@ -5,6 +5,7 @@ from server.extensions import db
 from server.models.donation import Donation
 from server.models.user import User
 from server.models.donation_request import DonationRequest
+from server.utils.helpers import paginate
 
 donations_bp = Blueprint('donations', __name__)
 api = Api(donations_bp)
@@ -46,8 +47,15 @@ class DonationListResource(Resource):
         if not user or user.role != 'donor':
             return {"error": "Only donors can view donations"}, 403
 
-        donations = Donation.query.filter_by(donor_id=user.id).all()
-        return [d.to_dict() for d in donations], 200
+        # Pagination params
+        page = int(request.args.get('page', 1))
+        limit = int(request.args.get('limit', 10))
+
+        query = Donation.query.filter_by(donor_id=user.id)
+        paginated = paginate(query, page, limit)
+
+        return paginated, 200
+
 
 # register
 api.add_resource(DonationCreateResource, '/donate')

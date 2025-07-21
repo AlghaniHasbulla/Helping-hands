@@ -1,39 +1,63 @@
 from flask import Blueprint, request, jsonify
+from flask_restful import Resource, Api
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models.user import User
+from app.models.user import User, db
 from services.cloudinary_service import upload_image
 from app import db
 
 profile_bp = Blueprint('profile', __name__)
+api = Api(profile_bp)
 
-@profile_bp.route('/profile', methods=['GET'])
-@jwt_required()
-def get_profile():
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-    return jsonify({
-        "id": user.id,
-        "email": user.email,
-        "full_name": user.full_name,
-        "role": user.role,
-        "avatar_url": user.avatar_url
-    }), 200
+class ProfileResource(Resource):
+    @jwt_required()
+    def get(self):
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
 
-@profile_bp.route('/profile', methods=['PUT'])
-@jwt_required()
-def update_profile():
-    user_id = get_jwt_identity()
-    data = request.get_json()
-    user = User.query.get(user_id)
+        if not user:
+            return {"msg": "User not found"}, 404
 
-    if 'full_name' in data:
-        user.full_name = data['full_name']
-    if 'password' in data:
-        user.set_password(data['password'])
+        return {
+            "id": user.id,
+            "full_name": user.full_name,
+            "email": user.email,
+            "role": user.role,
+            "avatar_url": user.avatar_url,
+            "created_at": user.created_at.isoformat()
+        }, 200
 
-    if 'avatar' in request.files:
-        avatar_url = upload_image(request.files['avatar'])
-        user.avatar_url = avatar_url
+    @jwt_required()
+    def put(self):
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
 
-    db.session.commit()
-    return jsonify({"msg": "Profile updated"}), 200
+        if not user:
+            return {"msg": "User not found"}, 404
+
+        data = request.form
+        full_name = data.get('full_name')
+        password = data.get('password')
+
+        if full_name:
+            user.full_name = full_name
+
+        if password:
+            user.set_password(password)
+
+        if 'avatar' in request.files:
+            file = request.files['avatar']
+            avatar_url = upload_image(file, folder="avatars")
+            user.avatar_url = avatar_url
+
+        db.session.commit()
+
+        return {
+            "msg": "Profile updated",
+            "user": {
+                "full_name": user.full_name,
+                "email": user.email,
+                "avatar_url": user.avatar_url
+            }
+        }, 200
+
+api.add_resource(ProfileResource, '/profile')

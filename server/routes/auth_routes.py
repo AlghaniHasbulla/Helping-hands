@@ -1,6 +1,10 @@
 from flask_restful import Resource, Api
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import (
+    create_access_token,
+    jwt_required,
+    get_jwt_identity
+)
 from server.extensions import db
 from server.models import User
 from server.utils.validators import validate_register, validate_login
@@ -10,6 +14,7 @@ from services.email_service import send_verification_email
 auth_bp = Blueprint('auth', __name__)
 auth_api = Api(auth_bp)
 
+# --- Public Route ---
 class Register(Resource):
     def post(self):
         data = request.get_json()
@@ -32,6 +37,7 @@ class Register(Resource):
         send_verification_email(new_user)
         return {"msg": "User registered. Check email for verification."}, 201
 
+#  Public Rout
 class Login(Resource):
     def post(self):
         data = request.get_json()
@@ -54,13 +60,36 @@ class Login(Resource):
             }
         }, 200
 
+# --- Protected Route ---
 class VerifyEmail(Resource):
+    @jwt_required()
     def post(self):
+        user_id = get_jwt_identity()
         token = request.json.get('token')
-        # Implement token decoding and verification logic here
-        return {"msg": "Email verified successfully!"}, 200
+        # Implement actual token verification logic here
+        return {"msg": f"Email verified successfully for user {user_id}!"}, 200
+
+# --- Protected Route Example ---
+class Dashboard(Resource):
+    @jwt_required()
+    def get(self):
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        if not user:
+            return {"msg": "User not found"}, 404
+
+        return {
+            "msg": f"Welcome, {user.full_name}",
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "role": user.role,
+                "full_name": user.full_name
+            }
+        }, 200
 
 # Register the routes with the Flask-RESTful API
 auth_api.add_resource(Register, '/register')
 auth_api.add_resource(Login, '/login')
 auth_api.add_resource(VerifyEmail, '/verify-email')
+auth_api.add_resource(Dashboard, '/dashboard')  

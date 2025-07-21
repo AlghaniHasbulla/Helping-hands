@@ -17,7 +17,7 @@ class DonationRequest(db.Model, SerializerMixin):
 
     donations = db.relationship(
         'Donation',
-        backref='donation_request',
+        back_populates='donation_request',
         lazy=True,
         cascade='all, delete'
     )

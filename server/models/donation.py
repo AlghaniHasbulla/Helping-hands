@@ -15,7 +15,7 @@ class Donation(db.Model, SerializerMixin):
     
     # rships
     donor = db.relationship('User', backref='donations', lazy=True)
-    donation_request = db.relationship('DonationRequest', backref='donations', lazy=True)
+    donation_request = db.relationship('DonationRequest', back_populates='donations', lazy=True)
 
     serialize_rules = (
         '-donor.donations',

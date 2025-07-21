@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import request
 from server.models.donation_request import DonationRequest
 from server.models.user import User
-from server.extension import db
+from server.extensions import db
 
 # Create blueprint
 donation_requests_bp = Blueprint('donation_requests', __name__)

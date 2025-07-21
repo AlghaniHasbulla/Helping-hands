@@ -15,14 +15,15 @@ api = Api(donation_requests_bp)
 # Parser
 parser = reqparse.RequestParser()
 parser.add_argument('title', type=str, required=True)
+parser.add_argument('description', type=str, required=True, help='Description is required')
 parser.add_argument('category_id', type=int, required=True)
 parser.add_argument('amount_requested', type=float, required=True)
 
 class DonationRequestListResource(Resource):
     @jwt_required()
     def post(self):
-        user_id = get_jwt_identity()
-        user = User.query.get(user_id)
+        identity= get_jwt_identity()
+        user = db.session.get(User,identity)
 
         if user.role != "ngo":
             return {"error": "Only NGOs can create donation requests."}, 403

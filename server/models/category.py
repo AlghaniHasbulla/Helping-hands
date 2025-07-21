@@ -10,10 +10,10 @@ class Category(db.Model,SerializerMixin):
     # rships
     donation_requests = db.relationship(
         'DonationRequest',
-        backref='category',
+        back_populates='category',
         lazy=True,cascade='all,delete'
         )
-    serialize_rules = ('-donation_requests.category')
+    serialize_rules = ('-donation_requests.category',)
     
     @property
     def donations(self):

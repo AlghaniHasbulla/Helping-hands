@@ -1,18 +1,17 @@
-# server/tests/conftest.py
 import pytest
 from server.app import create_app
 from server.extensions import db
 from flask_jwt_extended import create_access_token
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def app():
     app = create_app(testing=True)
-    
     with app.app_context():
-        db.create_all()
+        db.drop_all()    # drop existing tables, if any
+        db.create_all()  # create tables fresh
         yield app
         db.session.remove()
-        db.drop_all()
+        db.drop_all()    # cleanup after tests
 
 @pytest.fixture
 def client(app):
@@ -20,15 +19,12 @@ def client(app):
 
 @pytest.fixture
 def donor_token():
-    # Simulate a donor user
-    return create_access_token(identity=1)  # user_id = 1
+    return create_access_token(identity=1)
 
 @pytest.fixture
 def ngo_token():
-    # Simulate an NGO user
-    return create_access_token(identity=2)  # user_id = 2
+    return create_access_token(identity=2)
 
 @pytest.fixture
 def admin_token():
-    # Simulate an Admin user
-    return create_access_token(identity=3)  # user_id = 3
+    return create_access_token(identity=3)

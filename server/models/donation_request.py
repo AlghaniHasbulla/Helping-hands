@@ -21,6 +21,11 @@ class DonationRequest(db.Model, SerializerMixin):
         lazy=True,
         cascade='all, delete'
     )
+    category = db.relationship("Category", back_populates="donation_requests")
+    ngo = db.relationship(
+        "User", 
+        back_populates="donation_requests"
+        )
     serialize_rules = (
         '-ngo.donation_requests',
         '-category.donation_requests',

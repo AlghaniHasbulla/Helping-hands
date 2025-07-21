@@ -2,11 +2,12 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from server.extensions import db
+from sqlalchemy_serializer import SerializerMixin
 
 
 bcrypt = Bcrypt()
 
-class User(db.Model):
+class User(db.Model,SerializerMixin):
 
     __tablename__ = 'users'
     
@@ -18,6 +19,10 @@ class User(db.Model):
     is_verified = db.Column(db.Boolean, default=False)
     avatar_url = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    donation_requests = db.relationship('DonationRequest', back_populates='ngo', lazy=True)
+  
+    serialize_rules = ('-donation_requests.ngo',)
 
     def set_password(self, password):
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')

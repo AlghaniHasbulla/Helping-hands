@@ -1,7 +1,8 @@
 from flask import Flask
 from dotenv import load_dotenv
-from extensions import db,migrate
+from server.extensions import db,migrate
 import os
+from flasgger import Swagger
 from server.routes.donation_request import donation_requests_bp
 from server.routes.auth_routes import auth_bp
 from server.routes.donations import donations_bp
@@ -15,7 +16,7 @@ load_dotenv()
 
 def create_app():
     app = Flask(__name__)
-
+    swagger = Swagger(app)
     app.config['SQLALCHEMY_DATABASE_URI']= os.getenv("DATABASE_URL")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

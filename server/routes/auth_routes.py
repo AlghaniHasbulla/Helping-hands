@@ -8,7 +8,7 @@ from flask_jwt_extended import (
 from server.extensions import db
 from server.models import User
 from server.utils.validators import validate_register, validate_login
-from services.email_service import send_verification_email
+from server.services.email_service import send_verification_email
 
 # Set up the blueprint and API
 auth_bp = Blueprint('auth', __name__)

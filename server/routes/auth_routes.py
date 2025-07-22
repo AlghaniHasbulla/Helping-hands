@@ -66,7 +66,6 @@ class VerifyEmail(Resource):
     def post(self):
         user_id = get_jwt_identity()
         token = request.json.get('token')
-        # Implement actual token verification logic here
         return {"msg": f"Email verified successfully for user {user_id}!"}, 200
 
 # --- Protected Route Example ---

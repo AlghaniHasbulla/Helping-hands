@@ -25,7 +25,7 @@ def test_create_donation_request(client, app):
 
         # Generate token after commit
         ngo_token = create_access_token(identity=user.id)
-        category_id = category.id  # assign ID here while session is active
+        category_id = category.id  
 
     headers = {
         "Authorization": f"Bearer {ngo_token}",
@@ -35,7 +35,7 @@ def test_create_donation_request(client, app):
     payload = {
         "title": "Test Request",
         "description": "We need help with food.",
-        "category_id": category_id,  # use stored ID
+        "category_id": category_id, 
         "amount_requested": 5000.0
     }
 

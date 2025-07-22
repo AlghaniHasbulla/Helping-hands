@@ -7,11 +7,11 @@ from flask_jwt_extended import create_access_token
 def app():
     app = create_app(testing=True)
     with app.app_context():
-        db.drop_all()    # drop existing tables, if any
-        db.create_all()  # create tables fresh
+        db.drop_all()   
+        db.create_all()  
         yield app
         db.session.remove()
-        db.drop_all()    # cleanup after tests
+        db.drop_all()    
 
 @pytest.fixture
 def client(app):

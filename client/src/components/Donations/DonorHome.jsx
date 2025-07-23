@@ -59,6 +59,7 @@ const DonorHome = () => {
               <p className="text-blue-700 mb-1">{req.description}</p>
               <p className="text-blue-800 font-medium">Category: {req.category?.name || 'N/A'}</p>
               <p className="text-blue-800 font-medium">Amount Requested: ${req.amount_requested.toFixed(2)}</p>
+              <p className="text-blue-800 font-medium">Amount Raised: ${req.amount_raised ? req.amount_raised.toFixed(2) : '0.00'}</p>
               <p className="text-blue-600 text-sm">Created: {formatDate(req.created_at)}</p>
             </li>
           ))}

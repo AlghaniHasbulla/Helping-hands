@@ -64,11 +64,10 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-blue-50">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
+    <div className="flex items-center justify-center min-h-screen bg-blue-600">
+      <div className="w-full  mt-10 max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-blue-900 mb-2">Helping Hands</h1>
-          <h2 className="text-2xl font-semibold text-blue-800">Create Account</h2>
+          <h1 className="text-4xl font-bold text-blue-900 mb-2">Create Account</h1>
           <p className="text-blue-600">Start your charitable journey today</p>
         </div>
 

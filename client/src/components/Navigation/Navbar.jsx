@@ -37,7 +37,7 @@ const Navbar = () => {
           <Link to="/causes" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">Causes</Link>
           <Link to="/events" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">Events</Link>
           <Link to="/about" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">About</Link>
-          <Link to="/contact" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">Contact</Link>
+          <Link to="/contacts" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">Contact</Link>
         </div>
       </div>
 

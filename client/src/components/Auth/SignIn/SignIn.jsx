@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom'
 
 const SignIn = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-blue-50">
+    <div className="flex items-center justify-center min-h-screen bg-blue-600">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-blue-900 mb-2">Helping Hands</h1>
-          <h2 className="text-2xl font-semibold text-blue-800">Welcome Back</h2>
+          <h1 className="text-4xl font-bold text-blue-900 mb-2">Welcome Back</h1>
           <p className="text-blue-600">Sign in to continue your charitable journey</p>
         </div>
 

@@ -10,11 +10,11 @@ from server.models import User
 from server.utils.validators import validate_register, validate_login
 from server.services.email_service import send_verification_email
 
-# Set up the blueprint and API
+# blueprint 
 auth_bp = Blueprint('auth', __name__)
 auth_api = Api(auth_bp)
 
-# --- Public Route ---
+# Public Route 
 class Register(Resource):
     def post(self):
         data = request.get_json()
@@ -37,7 +37,7 @@ class Register(Resource):
         send_verification_email(new_user)
         return {"msg": "User registered. Check email for verification."}, 201
 
-#  Public Rout
+#  Public Route
 class Login(Resource):
     def post(self):
         data = request.get_json()

@@ -44,7 +44,7 @@ const Navbar = () => {
 
       <div className={`${isMenuOpen ? 'hidden' : 'flex'} md:flex items-center gap-2`}>
         <Link
-          to="/donation-request"
+          to="/donor-home"
           className="hidden md:block bg-blue-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-700 text-xs md:text-sm font-medium"
         >
           Donate Now

@@ -8,12 +8,15 @@ import DonationForm from './components/Donations/DonationForm';
 import DonationHistory from './components/Donations/DonationHistory';
 import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home/Home';
+import Causes from './components/Causes/Causes';
+
 
 
 const routes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/causes" element={<Causes />} />
       <Route path="/Sign-In" element={<SignIn />} />
       <Route path="/Sign-Up" element={<SignUp />} />
       <Route path="/donation-request" element={<DonationRequestForm />} />

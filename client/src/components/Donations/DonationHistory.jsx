@@ -21,7 +21,7 @@ const DonationHistory = () => {
         <h2 className="text-3xl font-semibold text-blue-800 mb-6">Your Donation History</h2>
         {donationHistory.loading && <p>Loading...</p>}
         {donationHistory.error && <p className="text-red-600">{donationHistory.error}</p>}
-        {!donationHistory.loading && (donationHistory.items || []).length === 0 && <p>No donations found.</p>}
+        {!donationHistory.loading && donationHistory.items.length === 0 && <p>No donations found.</p>}
 
         <table className="w-full table-auto border-collapse border border-gray-300">
           <thead>
@@ -32,7 +32,7 @@ const DonationHistory = () => {
             </tr>
           </thead>
           <tbody>
-            {(donationHistory.items || []).map((donation) => (
+            {donationHistory.items.map((donation) => (
               <tr key={donation.id} className="hover:bg-blue-50">
                 <td className="border border-gray-300 px-4 py-2">{donation.donation_request?.title || 'N/A'}</td>
                 <td className="border border-gray-300 px-4 py-2">${donation.amount.toFixed(2)}</td>

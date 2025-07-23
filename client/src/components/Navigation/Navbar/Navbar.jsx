@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import logo from '@/assets/helpinghandsliogo.jpeg';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const userRole = useSelector(state => state.auth.user?.role);
 
   return (
     <nav className="bg-white shadow px-4 py-4 md:px-8 md:py-6 flex items-center justify-between">
@@ -39,12 +41,20 @@ const Navbar = () => {
           <Link to="/blog" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">Blog</Link>
           <Link to="/about" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">About</Link>
           <Link to="/contact" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">Contact</Link>
+          {userRole === 'donor' && (
+            <>
+              <Link to="/donor/home" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">Donor Home</Link>
+              <Link to="/donor/history" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">Donation History</Link>
+              <Link to="/donor/receipts" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">Receipts</Link>
+              <Link to="/donor/goals" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">Goals</Link>
+            </>
+          )}
         </div>
       </div>
 
       <div className={`${isMenuOpen ? 'hidden' : 'flex'} md:flex items-center gap-2`}>
         <Link
-          to="/donor-home"
+          to="/donation-request"
           className="hidden md:block bg-blue-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-700 text-xs md:text-sm font-medium"
         >
           Donate Now

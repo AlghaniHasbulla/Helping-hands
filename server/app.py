@@ -1,7 +1,7 @@
 from flask import Flask
 from dotenv import load_dotenv
 from decouple import config
-from server.extensions import db, migrate, jwt
+from server.extensions import db, migrate, jwt,bcrypt
 from flasgger import Swagger
 import os
 
@@ -32,6 +32,7 @@ def create_app(testing=False):
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+    bcrypt.init_app(app)
 
     @app.route('/')
     def home():

@@ -1,18 +1,23 @@
 import cloudinary
 import cloudinary.uploader
 import os
+from dotenv import load_dotenv
 
-# Setup Cloudinary configuration (usually from env variables)
+load_dotenv()  
+
+
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
     api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET")
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True
 )
 
-def upload_image(image_file):
-    """
-    Uploads an image to Cloudinary and returns the secure URL.
-    `image_file` should be a file-like object (e.g., from Flask's `request.files['avatar']`)
-    """
-    result = cloudinary.uploader.upload(image_file)
-    return result.get("secure_url")
+
+def upload_image(file):
+    try:
+        result = cloudinary.uploader.upload(file)
+        return result['secure_url']
+    except Exception as e:
+        print(f"Cloudinary error: {e}")
+        return None

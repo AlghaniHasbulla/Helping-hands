@@ -14,7 +14,7 @@ from server.services.email_service import send_verification_email
 auth_bp = Blueprint('auth', __name__)
 auth_api = Api(auth_bp)
 
-# Public Route 
+
 class Register(Resource):
     def post(self):
         data = request.get_json()
@@ -33,7 +33,7 @@ class Register(Resource):
         new_user.set_password(data['password'])
         db.session.add(new_user)
         db.session.commit()
-
+        # send email 
         send_verification_email(new_user)
         return {"msg": "User registered. Check email for verification."}, 201
 
@@ -48,27 +48,35 @@ class Login(Resource):
         user = User.query.filter_by(email=data['email']).first()
         if not user or not user.check_password(data['password']):
             return {"msg": "Invalid credentials"}, 401
+        
+        if not user.is_verified:
+            return{"msg":"Email is not verified"}
 
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity={
+            "id":user.id,
+            "email":user.email,
+            "role":user.role
+            })
+        
         return {
+            "msg":f"Welcome back,{user.username}",
             "access_token": access_token,
             "user": {
                 "id": user.id,
                 "email": user.email,
                 "role": user.role,
-                "full_name": user.full_name
+                "user_name": user.user_name
             }
         }, 200
 
-# --- Protected Route ---
+# email verification
 class VerifyEmail(Resource):
     @jwt_required()
     def post(self):
         user_id = get_jwt_identity()
         token = request.json.get('token')
         return {"msg": f"Email verified successfully for user {user_id}!"}, 200
-
-# --- Protected Route Example ---
+    
 class Dashboard(Resource):
     @jwt_required()
     def get(self):
@@ -87,7 +95,7 @@ class Dashboard(Resource):
             }
         }, 200
 
-# Register the routes with the Flask-RESTful API
+# Register  routes
 auth_api.add_resource(Register, '/register')
 auth_api.add_resource(Login, '/login')
 auth_api.add_resource(VerifyEmail, '/verify-email')

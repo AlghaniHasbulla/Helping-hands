@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from flask_restful import Api, Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from server.models.user import User
@@ -19,10 +19,12 @@ class ProfileResource(Resource):
 
         return {
             "id": user.id,
+            "username": user.username,
             "email": user.email,
-            "full_name": user.full_name,
             "role": user.role,
-            "avatar_url": user.avatar_url
+            "avatar_url": user.avatar_url,
+            "is_verified": user.is_verified,
+            "created_at": user.created_at.isoformat()
         }, 200
 
     @jwt_required()
@@ -32,20 +34,24 @@ class ProfileResource(Resource):
         if not user:
             return {"error": "User not found"}, 404
 
-        # Accept JSON or form data
         data = request.form or request.get_json()
 
-        if 'full_name' in data:
-            user.full_name = data['full_name']
+        # Update username if provided
+        if 'username' in data:
+            user.username = data['username']
+
+        # Update password if provided
         if 'password' in data:
             user.set_password(data['password'])
 
+        # Handle avatar upload via Cloudinary
         if 'avatar' in request.files:
-            avatar_url = upload_image(request.files['avatar'])
+            image_file = request.files['avatar']
+            avatar_url = upload_image(image_file)
             user.avatar_url = avatar_url
 
         db.session.commit()
-        return {"msg": "Profile updated"}, 200
+        return {"msg": "Profile updated successfully"}, 200
 
-# Register resource
+# Register the resource route
 api.add_resource(ProfileResource, '/profile')

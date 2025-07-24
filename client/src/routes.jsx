@@ -7,8 +7,9 @@ import NGORequestsHistory from './components/Donations/NGORequestsHistory';
 import DonorHome from './components/Donations/DonorHome';
 import DonationForm from './components/Donations/DonationForm';
 import DonationHistory from './components/Donations/DonationHistory';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import About from './components/About';
 import Hero from './components/Hero';
+import { Route, Routes, Navigate } from 'react-router-dom';
 
 const DonorReceipts = () => <div>Donor Receipts Page (Placeholder)</div>;
 const DonorGoals = () => <div>Donor Goals Page (Placeholder)</div>;
@@ -23,6 +24,7 @@ const RoutesWrapper = () => {
       <Route path="/Sign-Up" element={<SignUp />} />
       <Route path="/donation-request" element={<DonationRequestForm />} />
       <Route path="/ngo-requests" element={<NGORequestsHistory />} />
+      <Route path="/about" element={<About />} />
       {userRole === 'donor' ? (
         <>
           <Route path="/donor/home" element={<DonorHome />} />

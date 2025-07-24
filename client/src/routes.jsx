@@ -9,6 +9,7 @@ import DonationForm from './components/Donations/DonationForm';
 import DonationHistory from './components/Donations/DonationHistory';
 import About from './components/About';
 import Blog from './components/Blog';
+import Contact from './components/Contact';
 import Hero from './components/Hero';
 import { Route, Routes, Navigate } from 'react-router-dom';
 
@@ -27,6 +28,7 @@ const RoutesWrapper = () => {
       <Route path="/ngo-requests" element={<NGORequestsHistory />} />
       <Route path="/about" element={<About />} />
       <Route path="/blog" element={<Blog />} />
+      <Route path="/contact" element={<Contact />} />
       {userRole === 'donor' ? (
         <>
           <Route path="/donor/home" element={<DonorHome />} />

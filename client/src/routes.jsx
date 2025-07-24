@@ -8,6 +8,7 @@ import DonorHome from './components/Donations/DonorHome';
 import DonationForm from './components/Donations/DonationForm';
 import DonationHistory from './components/Donations/DonationHistory';
 import { Route, Routes, Navigate } from 'react-router-dom';
+import Hero from './components/Hero';
 
 const DonorReceipts = () => <div>Donor Receipts Page (Placeholder)</div>;
 const DonorGoals = () => <div>Donor Goals Page (Placeholder)</div>;
@@ -17,6 +18,7 @@ const RoutesWrapper = () => {
 
   return (
     <Routes>
+      <Route path="/" element={<Hero />} />
       <Route path="/Sign-In" element={<SignIn />} />
       <Route path="/Sign-Up" element={<SignUp />} />
       <Route path="/donation-request" element={<DonationRequestForm />} />

@@ -53,18 +53,26 @@ const Navbar = () => {
       </div>
 
       <div className={`${isMenuOpen ? 'hidden' : 'flex'} md:flex items-center gap-2`}>
-        <Link
-          to="/donation-request"
-          className="hidden md:block bg-blue-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-700 text-xs md:text-sm font-medium"
-        >
-          Donate Now
-        </Link>
-        <Link
-          to="/sign-in"
-          className="border border-blue-600 text-blue-600 px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-50 text-xs md:text-sm font-medium"
-        >
-          Login
-        </Link>
+        {!userRole ? (
+          <>
+            <span className="text-gray-600 mr-4">Welcome to Helping Hands</span>
+          </>
+        ) : (
+          <>
+            <Link
+              to="/donation-request"
+              className="hidden md:block bg-blue-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-700 text-xs md:text-sm font-medium"
+            >
+              Donate Now
+            </Link>
+            <Link
+              to="/sign-in"
+              className="border border-blue-600 text-blue-600 px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-50 text-xs md:text-sm font-medium"
+            >
+              Logout
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );

@@ -5,6 +5,7 @@ from server.extensions import db, migrate, jwt,bcrypt
 from flasgger import Swagger
 import os
 
+from flask_cors import CORS
 from server.routes.donation_request import donation_requests_bp
 from server.routes.auth_routes import auth_bp
 from server.routes.donations import donations_bp
@@ -17,7 +18,11 @@ load_dotenv()
 def create_app(testing=False):
     app = Flask(__name__)
     Swagger(app)
-
+    CORS(app,
+         supports_credentials=True,
+         origins=[
+             "http://localhost:5173",
+             ])
     app.config['SECRET_KEY'] = config("SECRET_KEY", default="super-secret")
     app.config['JWT_SECRET_KEY'] = config("JWT_SECRET_KEY", default="jwt-secret")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

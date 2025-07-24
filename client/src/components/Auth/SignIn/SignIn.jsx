@@ -24,7 +24,7 @@ const SignIn = () => {
           <h1 className="text-3xl md:text-4xl font-bold text-blue-900 mb-1 md:mb-2">Welcome Back</h1>
           <p className="text-blue-600 text-sm md:text-base">Sign in to continue your charitable journey</p>
         </div>
-
+  
         <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block mb-1 text-sm font-medium text-blue-800">Email</label>

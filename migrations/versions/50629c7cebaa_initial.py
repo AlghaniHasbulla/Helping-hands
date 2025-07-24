@@ -1,8 +1,8 @@
-"""Add username and JWT secret config to User model
+"""initial
 
-Revision ID: db28dc1c6097
-Revises: ef29200f88bb
-Create Date: 2025-07-21 22:39:15.243716
+Revision ID: 50629c7cebaa
+Revises: 
+Create Date: 2025-07-24 16:15:04.650633
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'db28dc1c6097'
-down_revision = 'ef29200f88bb'
+revision = '50629c7cebaa'
+down_revision = None
 branch_labels = None
 depends_on = None
 

@@ -51,3 +51,4 @@ def create_app(testing=False):
     app.register_blueprint(admin_approval_bp)
 
     return app
+app = create_app()

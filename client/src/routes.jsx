@@ -8,6 +8,7 @@ import DonorHome from './components/Donations/DonorHome';
 import DonationForm from './components/Donations/DonationForm';
 import DonationHistory from './components/Donations/DonationHistory';
 import About from './components/About';
+import Blog from './components/Blog';
 import Hero from './components/Hero';
 import { Route, Routes, Navigate } from 'react-router-dom';
 
@@ -25,6 +26,7 @@ const RoutesWrapper = () => {
       <Route path="/donation-request" element={<DonationRequestForm />} />
       <Route path="/ngo-requests" element={<NGORequestsHistory />} />
       <Route path="/about" element={<About />} />
+      <Route path="/blog" element={<Blog />} />
       {userRole === 'donor' ? (
         <>
           <Route path="/donor/home" element={<DonorHome />} />

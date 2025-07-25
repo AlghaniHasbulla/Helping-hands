@@ -18,7 +18,7 @@ load_dotenv()
 def create_app(testing=False):
     app = Flask(__name__)
     Swagger(app)
-    CORS(app, resources={r"/*": {"origins": "*"}}) 
+    CORS(app) 
     app.config['SECRET_KEY'] = config("SECRET_KEY", default="super-secret")
     app.config['JWT_SECRET_KEY'] = config("JWT_SECRET_KEY", default="jwt-secret")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

@@ -19,7 +19,7 @@ class ProfileResource(Resource):
 
         return {
             "id": user.id,
-            "username": user.username,
+            "full_name": user.full_name,
             "email": user.email,
             "role": user.role,
             "avatar_url": user.avatar_url,
@@ -36,15 +36,15 @@ class ProfileResource(Resource):
 
         data = request.form or request.get_json()
 
-        # Update username if provided
-        if 'username' in data:
-            user.username = data['username']
+        
+        if 'full_name' in data:
+            user.full_name = data['full_name']
 
-        # Update password if provided
+       
         if 'password' in data:
             user.set_password(data['password'])
 
-        # Handle avatar upload via Cloudinary
+       
         if 'avatar' in request.files:
             image_file = request.files['avatar']
             avatar_url = upload_image(image_file)

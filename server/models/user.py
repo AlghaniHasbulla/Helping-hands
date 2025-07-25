@@ -39,7 +39,16 @@ class User(db.Model, SerializerMixin):
     causes = db.relationship('Cause', back_populates='ngo', lazy=True)
     events = db.relationship('Event', back_populates='ngo', lazy=True)
 
-    serialize_rules = ('-causes.ngo', '-events.ngo', '-donation_requests.ngo', '-performed_actions.actor', '-targeted_by_actions.target')
+    serialize_rules = (
+    '-causes.ngo',
+    '-causes.events.cause',
+    '-events.ngo',
+    '-events.cause',
+    '-donation_requests.ngo',
+    '-performed_actions.actor',
+    '-targeted_by_actions.target'
+    )
+
 
 
     

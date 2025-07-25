@@ -18,8 +18,14 @@ class Event(db.Model, SerializerMixin):
 
     ngo_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     ngo = db.relationship('User', back_populates=('events'))
+    
+    serialize_rules = (
+    '-ngo.events',
+    '-ngo.causes',
+    '-cause.events',
+    '-cause.ngo'  
+    )
 
-    serialize_rules = ('-ngo.events', '-cause.events')
     
     # expiry date check
     @property

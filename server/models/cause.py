@@ -23,5 +23,11 @@ class Cause(db.Model, SerializerMixin):
         return self.amount_raised >= self.amount_target
   
 
-    serialize_rules = ('-ngo.causes', '-events.cause')
+    serialize_rules = (
+        '-ngo.causes',
+        '-ngo.events',
+        '-events.cause',
+        '-events.ngo'
+    )
+
 

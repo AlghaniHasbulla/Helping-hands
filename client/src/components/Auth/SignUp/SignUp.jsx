@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -11,6 +13,8 @@ const SignUp = () => {
   
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const fileInputRef = useRef(null);
   
   const handleChange = (e) => {
@@ -21,25 +25,58 @@ const SignUp = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        setError('File size too large (max 2MB)');
+        return;
+      }
       setAvatarFile(file);
+      setError('');
       const reader = new FileReader();
       reader.onloadend = () => setAvatarPreview(reader.result);
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataToSend = new FormData();
-    formDataToSend.append('full_name', formData.full_name);
-    formDataToSend.append('email', formData.email);
-    formDataToSend.append('password', formData.password);
-    formDataToSend.append('role', formData.role);
-    if (avatarFile) formDataToSend.append('avatar', avatarFile);
-    console.log('Form submitted:', formDataToSend);
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('full_name', formData.full_name);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('password', formData.password);
+      formDataToSend.append('role', formData.role);
+      
+      if (avatarFile) {
+        formDataToSend.append('avatar', avatarFile);
+      }
+
+      const response = await axios.post(
+        'https://helping-hands-backend-w4pu.onrender.com/auth/register',
+        formDataToSend,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.status === 201) {
+        navigate('/verify-email', { state: { email: formData.email } });
+      }
+    } catch (err) {
+      setError(err.response?.data?.msg || 'Registration failed. Please try again.');
+      console.error('Registration error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const triggerFileInput = () => fileInputRef.current.click();
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-600 p-4">
@@ -48,6 +85,12 @@ const SignUp = () => {
           <h1 className="text-3xl md:text-4xl font-bold text-blue-900 mb-1 md:mb-2">Create Account</h1>
           <p className="text-blue-600 text-sm md:text-base">Start your charitable journey today</p>
         </div>
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md">
+            {error}
+          </div>
+        )}
 
         <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
           <div className="flex flex-col items-center">
@@ -176,9 +219,22 @@ const SignUp = () => {
 
           <button 
             type="submit"
-            className="w-full px-4 py-2.5 md:py-3 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-300"
+            disabled={isLoading}
+            className={`w-full px-4 py-2.5 md:py-3 font-semibold text-white rounded-lg transition-colors duration-300 ${
+              isLoading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+            }`}
           >
-            Create Account
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Creating Account...
+              </div>
+            ) : (
+              'Create Account'
+            )}
           </button>
         </form>
 

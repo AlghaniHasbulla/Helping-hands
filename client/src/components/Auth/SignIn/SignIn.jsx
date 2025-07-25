@@ -1,20 +1,53 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Sign in submitted:', formData);
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await axios.post(
+        'https://helping-hands-backend-w4pu.onrender.com/login',
+        {
+          email: formData.email,
+          password: formData.password
+        }
+      );
+
+      if (response.status === 200) {
+        // Save token and user data to local storage
+        localStorage.setItem('accessToken', response.data.access_token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        
+        // Redirect to dashboard
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      if (err.response?.data?.msg === "Email is not verified") {
+        navigate('/verify-email', { state: { email: formData.email } });
+      } else {
+        setError(err.response?.data?.msg || 'Login failed. Please try again.');
+      }
+      console.error('Login error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -25,6 +58,12 @@ const SignIn = () => {
           <p className="text-blue-600 text-sm md:text-base">Sign in to continue your charitable journey</p>
         </div>
   
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md">
+            {error}
+          </div>
+        )}
+
         <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block mb-1 text-sm font-medium text-blue-800">Email</label>
@@ -59,9 +98,22 @@ const SignIn = () => {
 
           <button 
             type="submit"
-            className="w-full px-4 py-2.5 md:py-3 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-300"
+            disabled={isLoading}
+            className={`w-full px-4 py-2.5 md:py-3 font-semibold text-white rounded-lg transition-colors duration-300 ${
+              isLoading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+            }`}
           >
-            Sign In
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Signing In...
+              </div>
+            ) : (
+              'Sign In'
+            )}
           </button>
         </form>
 

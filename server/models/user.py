@@ -36,8 +36,11 @@ class User(db.Model, SerializerMixin):
         back_populates='target',
         lazy=True
     )
+    causes = db.relationship('Cause', backref='ngo', lazy=True)
+    events = db.relationship('Event', backref='ngo', lazy=True)
 
-    serialize_rules = ('-donation_requests.ngo',)
+    serialize_rules = ('-donation_requests.ngo', '-causes.ngo', '-events.ngo')
+
 
     def set_password(self, password):
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')

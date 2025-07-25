@@ -40,8 +40,8 @@ def create_app(testing=False):
         return {"message":"Welcome to helping hands api "}
 
     app.register_blueprint(donation_requests_bp)
-    app.register_blueprint(auth_bp, url_prefix='/auth')
-    app.register_blueprint(profile_bp, url_prefix="/api")
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(profile_bp)
     app.register_blueprint(donations_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(admin_approval_bp)

@@ -11,7 +11,7 @@ api = Api(cause_bp)
 
 class PublicCauseList(Resource):
     def get(self):
-        causes = Cause.query.filter(Cause.current_amount < Cause.target_amount).all()
+        causes = Cause.query.filter(Cause.amount_raised < Cause.amount_target).all()
         return [cause.to_dict() for cause in causes], 200
 
 
@@ -31,8 +31,8 @@ class CauseCreate(Resource):
                 title=data['title'],
                 description=data['description'],
                 image_url=data.get('image_url'),
-                target_amount=data['target_amount'],
-                current_amount=data.get('current_amount', 0),
+                amount_target=data['target_amount'],
+                amount_raised=data.get('current_amount', 0),
                 ngo_id=user_id
             )
         except KeyError as e:

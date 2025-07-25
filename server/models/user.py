@@ -20,6 +20,7 @@ class User(db.Model,SerializerMixin):
     avatar_url = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     verification_token =db.Column(db.String,nullable=True)
+    verification_token_expiry = db.Column(db.DateTime, nullable=True)
     donation_requests = db.relationship('DonationRequest', back_populates='ngo', lazy=True)
   
     serialize_rules = ('-donation_requests.ngo',)

@@ -9,6 +9,7 @@ from server.extensions import db
 from server.models import User
 from server.utils.validators import validate_register, validate_login
 from server.services.email_service import send_verification_email
+from datetime import datetime
 
 # Blueprint setup
 auth_bp = Blueprint('auth', __name__)
@@ -70,14 +71,48 @@ class Login(Resource):
 
 # Email verification
 class VerifyEmail(Resource):
-    @jwt_required()
     def post(self):
-        user_id = get_jwt_identity()
         token = request.json.get('token')
 
-        # (Optional) logic to check if token is valid
+        if not token:
+            return {"error": "Missing token"}, 400
 
-        return {"msg": f"Email verified successfully for user {user_id}!"}, 200
+        user = User.query.filter_by(verification_token=token).first()
+
+        if not user:
+            return {"error": "Invalid token"}, 404
+
+        if user.verification_token_expiry and user.verification_token_expiry < datetime.utcnow():
+            return {"error": "Token has expired"}, 403
+
+        user.is_verified = True
+        user.verification_token = None
+        user.verification_token_expiry = None
+        db.session.commit()
+
+        return {"message": "Email verified successfully"}, 200
+# resennd verification    
+class ResendVerification(Resource):
+    def post(self):
+        data = request.get_json()
+        email = data.get('email')
+
+        if not email:
+            return {"error": "Email is required"}, 400
+
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            return {"error": "No user found with that email"}, 404
+
+        if user.is_verified:
+            return {"message": "Email is already verified"}, 200
+
+        # Send a fresh token
+        send_verification_email(user)
+
+        return {"message": "Verification email resent"}, 200
+
 
 # Dashboard
 class Dashboard(Resource):
@@ -104,3 +139,4 @@ auth_api.add_resource(Register, '/register')
 auth_api.add_resource(Login, '/login')
 auth_api.add_resource(VerifyEmail, '/verify-email')
 auth_api.add_resource(Dashboard, '/dashboard')
+auth_api.add_resource(ResendVerification, '/resend-verification')

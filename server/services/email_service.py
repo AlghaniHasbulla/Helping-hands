@@ -20,8 +20,17 @@ def send_verification_email(user):
     user.verification_token_expiry = datetime.utcnow() + timedelta(minutes=10)
     db.session.commit()
 
-    sender = {"email": os.getenv("SENDER_EMAIL"), "name": "Helping Hands"}
-    to = [{"email": user.email, "name": user.full_name}]
+    sender = {
+        "email": os.getenv("MAIL_DEFAULT_SENDER"), 
+        "name": "Helping Hands"
+    }
+
+    # Recipient
+    to = [{
+        "email": user.email,
+        "name": user.full_name
+    }]
+
     subject = "Verify your email"
     html_content = f"""
     <html>
@@ -34,6 +43,7 @@ def send_verification_email(user):
     </html>
     """
 
+    # Build email payload
     send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
         to=to,
         sender=sender,
@@ -41,8 +51,9 @@ def send_verification_email(user):
         html_content=html_content
     )
 
+    #
     try:
         response = api_instance.send_transac_email(send_smtp_email)
-        logger.info(f" Verification email sent to {user.email}. Response: {response}")
+        logger.info(f"Verification email sent to {user.email}. Response: {response}")
     except ApiException as e:
         logger.error(f"Failed to send verification email to {user.email}. Brevo error: {e}")

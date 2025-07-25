@@ -4,6 +4,8 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from server.models.user import User
 from server.extensions import db
 from server.utils.role_helpers import is_superadmin, log_admin_action
+from server.models.admin_action_log import AdminActionLog  
+
 
 super_admin_bp = Blueprint('super_admin', __name__)
 api = Api(super_admin_bp)
@@ -88,6 +90,30 @@ class UserResource(Resource):
         log_admin_action(admin_id, "Deleted user", target_user_id=user.id)
         return {"message": "User deleted"}, 200
 
+class AdminActionLogResource(Resource):
+    @jwt_required()
+    def get(self):
+        admin_id = get_jwt_identity()
+        if not is_superadmin(admin_id):
+            return {"error": "Access denied"}, 403
+
+        logs = AdminActionLog.query.order_by(AdminActionLog.timestamp.desc()).all()
+        result = []
+
+        for log in logs:
+            result.append({
+                "id": log.id,
+                "actor_id": log.actor_id,
+                "actor_name": log.actor.full_name if log.actor else None,
+                "action": log.action,
+                "target_user_id": log.target_user_id,
+                "target_name": log.target.full_name if log.target else None,
+                "timestamp": log.timestamp.isoformat()
+            })
+
+        return result, 200
+
 # Register resources
 api.add_resource(UserListResource, '/superadmin/users')
 api.add_resource(UserResource, '/superadmin/users/<int:id>')
+api.add_resource(AdminActionLogResource, '/superadmin/logs')

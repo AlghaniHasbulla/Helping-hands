@@ -31,8 +31,8 @@ class CauseCreate(Resource):
                 title=data['title'],
                 description=data['description'],
                 image_url=data.get('image_url'),
-                amount_target=data['target_amount'],
-                amount_raised=data.get('current_amount', 0),
+                amount_target=data['amount_target'],
+                amount_raised=data.get('amount_raised', 0),
                 ngo_id=user_id
             )
         except KeyError as e:

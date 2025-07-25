@@ -13,6 +13,7 @@ from server.routes.donations import donations_bp
 from server.routes.profile_routes import profile_bp
 from server.routes.admin_categories import admin_bp
 from server.routes.admin_approvals import admin_approval_bp
+from server.routes.super_admin import super_admin_bp
 import logging
 
 load_dotenv()
@@ -57,6 +58,7 @@ def create_app(testing=False):
     app.register_blueprint(donations_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(admin_approval_bp)
+    app.register_blueprint(super_admin_bp)
 
     return app
 app = create_app()

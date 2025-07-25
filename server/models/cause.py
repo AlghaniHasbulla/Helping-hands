@@ -12,7 +12,7 @@ class Cause(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     ngo_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    ngo = db.relationship('User', backref=db.backref('causes', lazy=True))
+    ngo = db.relationship('User',back_populates='causes')
 
     events = db.relationship('Event', back_populates='cause', cascade='all, delete-orphan')
     amount_target = db.Column(db.Float, nullable=False, default=0)

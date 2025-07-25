@@ -17,7 +17,7 @@ class Event(db.Model, SerializerMixin):
     cause = db.relationship('Cause', back_populates='events')
 
     ngo_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    ngo = db.relationship('User', backref=db.backref('events', lazy=True))
+    ngo = db.relationship('User', back_populates=('events'))
 
     serialize_rules = ('-ngo.events', '-cause.events')
     

@@ -24,6 +24,7 @@ def create_app(testing=False):
     app.config['SECRET_KEY'] = config("SECRET_KEY", default="super-secret")
     app.config['JWT_SECRET_KEY'] = config("JWT_SECRET_KEY", default="jwt-secret")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
 
     # Set the database URI based on testing mode
     if testing:

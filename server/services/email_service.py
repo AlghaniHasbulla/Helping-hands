@@ -28,8 +28,8 @@ def send_verification_email(user):
     <body>
         <h1>Email Verification</h1>
         <p>Hello {user.full_name},</p>
-        <p>Please verify your email by clicking the link below. This link expires in 1 hour.</p>
-        <a href="http://localhost:5173//verify-email?token={token}">Verify Email</a>
+        <p>Please verify your email by clicking the link below. This link expires in 10 minutes.</p>
+        <a href="http://localhost:5173/verify-email?token={token}">Verify Email</a>
     </body>
     </html>
     """

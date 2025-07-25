@@ -54,7 +54,7 @@ const SignUp = () => {
       }
 
       const response = await axios.post(
-        'https://helping-hands-backend-w4pu.onrender.com/auth/register',
+        'https://helping-hands-backend-w4pu.onrender.com/register',
         formDataToSend,
         {
           headers: {

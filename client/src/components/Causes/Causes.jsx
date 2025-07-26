@@ -316,7 +316,7 @@ const Causes = () => {
                         {Math.round(((cause.raised || cause.amount_raised) / (cause.goal || cause.amount_target)) * 100)}% funded
                       </div>
                       <Link 
-                        to={`/cause/${cause.id}`} 
+                        to={`/donate/${cause.id}`} 
                         className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
                       >
                         Donate

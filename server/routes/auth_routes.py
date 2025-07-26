@@ -91,7 +91,7 @@ class VerifyEmail(Resource):
         db.session.commit()
 
         return {"message": "Email verified successfully"}, 200
-# resennd verification    
+# resend verification    
 class ResendVerification(Resource):
     def post(self):
         data = request.get_json()

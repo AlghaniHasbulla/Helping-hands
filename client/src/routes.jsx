@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom';
 import SignUp from './components/Auth/SignUp/SignUp';
 import SignIn from './components/Auth/SignIn/SignIn';
+import TokenValidation from './components/Auth/TokenValidation/TokenValidation';
 import DonationRequestForm from './components/Donations/DonationRequestForm';
 import NGORequestsHistory from './components/Donations/NGORequestsHistory';
 import DonorHome from './components/Donations/DonorHome';
@@ -12,7 +13,6 @@ import Causes from './components/Causes/Causes';
 import Events from './components/Events/Events';
 import About from './components/About/About';
 import Contacts from './components/Contacts/Contacts';
-
 
 
 const routes = () => {
@@ -30,6 +30,7 @@ const routes = () => {
       <Route path="/donor-home" element={<DonorHome />} />
       <Route path="/donate/:id" element={<DonationForm />} />
       <Route path="/donation-history" element={<DonationHistory />} />
+      <Route path="/verify-email" element={<TokenValidation />} />
     </Routes>
   );
 }

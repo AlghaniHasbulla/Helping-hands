@@ -1,76 +1,14 @@
-// src/Events.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Clock, Users, Heart } from 'lucide-react';
+import api from '../../lib/api';
 
 const Events = () => {
-  // Sample events data
-  const events = [
-    {
-      id: 1,
-      title: 'Annual Charity Gala',
-      date: '2023-11-15',
-      time: '18:30',
-      location: 'Grand Ballroom, Downtown',
-      description: 'Join us for an elegant evening of dining and dancing to raise funds for children\'s education programs.',
-      volunteersNeeded: 25,
-      category: 'fundraiser',
-      featured: true
-    },
-    {
-      id: 2,
-      title: 'Community Food Drive',
-      date: '2023-10-28',
-      time: '09:00',
-      location: 'City Community Center',
-      description: 'Help collect and sort non-perishable food items for families in need this holiday season.',
-      volunteersNeeded: 50,
-      category: 'volunteer'
-    },
-    {
-      id: 3,
-      title: 'Beach Cleanup Day',
-      date: '2023-11-05',
-      time: '08:00',
-      location: 'Sunset Beach',
-      description: 'Participate in our coastal conservation efforts to keep our beaches clean and protect marine life.',
-      volunteersNeeded: 100,
-      category: 'environment'
-    },
-    {
-      id: 4,
-      title: 'Winter Clothing Drive',
-      date: '2023-11-20',
-      time: '10:00',
-      location: 'Helping Hands Headquarters',
-      description: 'Collect and distribute warm clothing to homeless shelters before winter sets in.',
-      volunteersNeeded: 30,
-      category: 'volunteer'
-    },
-    {
-      id: 5,
-      title: 'Charity Fun Run',
-      date: '2023-12-02',
-      time: '07:30',
-      location: 'Riverside Park',
-      description: '5K run/walk to raise funds for medical research. All fitness levels welcome!',
-      volunteersNeeded: 40,
-      category: 'fundraiser',
-      featured: true
-    },
-    {
-      id: 6,
-      title: 'Youth Mentorship Workshop',
-      date: '2023-11-10',
-      time: '14:00',
-      location: 'Youth Center',
-      description: 'Help mentor underprivileged youth through career guidance and skill-building activities.',
-      volunteersNeeded: 20,
-      category: 'education'
-    }
-  ];
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Event categories
+  // Event categories (static)
   const categories = [
     { id: 'all', name: 'All Events' },
     { id: 'fundraiser', name: 'Fundraisers' },
@@ -78,6 +16,23 @@ const Events = () => {
     { id: 'education', name: 'Education' },
     { id: 'environment', name: 'Environment' }
   ];
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await api.get('/events');
+        setEvents(response.data);
+      } catch (err) {
+        setError('Failed to load events. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -125,67 +80,71 @@ const Events = () => {
               ))}
             </div>
 
-            <div className="space-y-6">
-              {events.map((event) => (
-                <div 
-                  key={event.id} 
-                  className={`bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-lg ${
-                    event.featured ? 'border-l-4 border-blue-500' : ''
-                  }`}
-                >
-                  <div className="p-6 md:flex">
-                    <div className="md:w-1/4 mb-4 md:mb-0 flex flex-col items-center justify-center bg-blue-50 rounded-lg py-4">
-                      <div className="text-3xl font-bold text-blue-700">
-                        {new Date(event.date).getDate()}
-                      </div>
-                      <div className="text-blue-600 font-medium">
-                        {new Date(event.date).toLocaleString('default', { month: 'short' })}
-                      </div>
-                      <div className="text-blue-500 mt-2 flex items-center">
-                        <Clock className="h-4 w-4 mr-1" />
-                        <span>{event.time}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="md:w-3/4 md:pl-6">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-xl font-bold text-blue-900 mb-2">{event.title}</h3>
-                          <div className="flex items-center text-blue-700 mb-3">
-                            <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
-                            <span>{event.location}</span>
-                          </div>
+            {loading && <p className="text-center text-blue-700 font-medium py-12">Loading events...</p>}
+            {error && <p className="text-center text-red-600 font-medium py-12">{error}</p>}
+
+            {!loading && !error && (
+              <div className="space-y-6">
+                {events.map((event) => (
+                  <div 
+                    key={event.id} 
+                    className={`bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-lg ${
+                      event.featured ? 'border-l-4 border-blue-500' : ''
+                    }`}
+                  >
+                    <div className="p-6 md:flex">
+                      <div className="md:w-1/4 mb-4 md:mb-0 flex flex-col items-center justify-center bg-blue-50 rounded-lg py-4">
+                        <div className="text-3xl font-bold text-blue-700">
+                          {new Date(event.date).getDate()}
                         </div>
-                        {event.featured && (
-                          <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-bold">
-                            Featured
-                          </span>
-                        )}
+                        <div className="text-blue-600 font-medium">
+                          {new Date(event.date).toLocaleString('default', { month: 'short' })}
+                        </div>
+                        <div className="text-blue-500 mt-2 flex items-center">
+                          <Clock className="h-4 w-4 mr-1" />
+                          <span>{event.time || 'TBD'}</span>
+                        </div>
                       </div>
                       
-                      <p className="text-blue-800 mb-4">{event.description}</p>
-                      
-                      <div className="flex flex-wrap items-center justify-between gap-4">
-                        <div className="flex items-center text-blue-700">
-                          <Users className="h-5 w-5 mr-2" />
-                          <span>{event.volunteersNeeded} volunteers needed</span>
+                      <div className="md:w-3/4 md:pl-6">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="text-xl font-bold text-blue-900 mb-2">{event.title}</h3>
+                            <div className="flex items-center text-blue-700 mb-3">
+                              <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                              <span>{event.location}</span>
+                            </div>
+                          </div>
+                          {event.featured && (
+                            <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-bold">
+                              Featured
+                            </span>
+                          )}
                         </div>
                         
-                        <div className="flex gap-3">
-                          <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                            Register
-                          </button>
-                          <button className="border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-lg transition-colors">
-                            <Heart className="h-5 w-5" />
-                          </button>
+                        <p className="text-blue-800 mb-4">{event.description}</p>
+                        
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                          <div className="flex items-center text-blue-700">
+                            <Users className="h-5 w-5 mr-2" />
+                            <span>{event.volunteersNeeded || 0} volunteers needed</span>
+                          </div>
+                          
+                          <div className="flex gap-3">
+                            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                              Register
+                            </button>
+                            <button className="border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-lg transition-colors">
+                              <Heart className="h-5 w-5" />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-
+                ))}
+              </div>
+            )}
           </div>
           
           {/* Sidebar */}
@@ -214,7 +173,7 @@ const Events = () => {
               <p className="text-blue-800 italic mb-4">
                 "Volunteering through Helping Hands has been one of the most rewarding experiences of my life."
               </p>
-              <button className="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-3 rounded-lg transition-colors">
+              <button className="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-lg transition-colors">
                 Become a Volunteer
               </button>
             </div>

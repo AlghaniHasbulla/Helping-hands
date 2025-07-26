@@ -70,37 +70,51 @@ class Login(Resource):
         }, 200
 
 # Email verification
+# auth_routes.py - Update VerifyEmail resource
 class VerifyEmail(Resource):
     def post(self):
         token = request.json.get('token')
-        email = request.json.get('email')  # Add email for additional validation
+        code = request.json.get('code')
+        email = request.json.get('email')
 
-        if not token or not email:
-            return {"error": "Token and email are required"}, 400
-
-        user = User.query.filter_by(
-            verification_token=token,
-            email=email
-        ).first()
-
+        if not email:
+            return {"error": "Email is required"}, 400
+        
+        user = User.query.filter_by(email=email).first()
+        
         if not user:
-            return {"error": "Invalid token or email"}, 404
+            return {"error": "User not found"}, 404
+        
+        # Handle token verification
+        if token:
+            if (user.verification_token == token and 
+                user.verification_token_expiry > datetime.utcnow()):
+                return verify_user(user)
+            return {"error": "Invalid or expired token"}, 400
+        
+        # Handle code verification
+        if code:
+            if (user.verification_code == code and 
+                user.verification_token_expiry > datetime.utcnow()):
+                return verify_user(user)
+            return {"error": "Invalid or expired code"}, 400
+        
+        return {"error": "Token or code required"}, 400
 
-        if user.verification_token_expiry < datetime.utcnow():
-            return {"error": "Token has expired"}, 403
+def verify_user(user):
+    user.is_verified = True
+    user.verification_token = None
+    user.verification_code = None
+    user.verification_token_expiry = None
+    db.session.commit()
+    
+    access_token = create_access_token(identity=user.id)
+    return {
+        "message": "Email verified successfully",
+        "access_token": access_token,
+        "user": user.to_dict()
+    }, 200
 
-        user.is_verified = True
-        user.verification_token = None
-        user.verification_token_expiry = None
-        db.session.commit()
-
-        # Automatically log user in after verification
-        access_token = create_access_token(identity=user.id)
-        return {
-            "message": "Email verified successfully",
-            "access_token": access_token,
-            "user": user.to_dict()
-        }, 200
 # resend verification    
 class ResendVerification(Resource):
     def post(self):

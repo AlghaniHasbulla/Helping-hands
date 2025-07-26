@@ -16,7 +16,11 @@ def send_verification_email(user):
 
     # Generate token and set expiry
     token = secrets.token_urlsafe(32)
+    code = ''.join(secrets.choice('0123456789') for _ in range(6))  # 6-digit code
+
     user.verification_token = token
+    user.verification_code = code
+
     user.verification_token_expiry = datetime.utcnow() + timedelta(minutes=10)
     db.session.commit()
 
@@ -37,8 +41,15 @@ def send_verification_email(user):
     <body>
         <h1>Email Verification</h1>
         <p>Hello {user.full_name},</p>
-        <p>Please verify your email by clicking the link below. This link expires in 10 minutes.</p>
-        <a href="http://localhost:5173/?token={token}">Verify Email</a>
+        <p>Please verify your email using this 6-digit code:</p>
+        <h2 style="font-size: 24px; letter-spacing: 3px; margin: 20px 0;">
+            {code}
+        </h2>
+        <p>This code expires in 10 minutes.</p>
+        <p>Alternatively, you can click this link to verify:</p>
+        <a href="http://localhost:5173/verify-email?token={token}">
+            Verify Email
+        </a>
     </body>
     </html>
     """

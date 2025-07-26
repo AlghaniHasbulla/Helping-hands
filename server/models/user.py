@@ -19,6 +19,7 @@ class User(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     verification_token = db.Column(db.String, nullable=True)
     verification_token_expiry = db.Column(db.DateTime, nullable=True)
+    verification_code = db.Column(db.String(6), nullable=True)
 
     donation_requests = db.relationship('DonationRequest', back_populates='ngo', lazy=True)
   

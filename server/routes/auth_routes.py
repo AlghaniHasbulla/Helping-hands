@@ -73,16 +73,20 @@ class Login(Resource):
 class VerifyEmail(Resource):
     def post(self):
         token = request.json.get('token')
+        email = request.json.get('email')  # Add email for additional validation
 
-        if not token:
-            return {"error": "Missing token"}, 400
+        if not token or not email:
+            return {"error": "Token and email are required"}, 400
 
-        user = User.query.filter_by(verification_token=token).first()
+        user = User.query.filter_by(
+            verification_token=token,
+            email=email
+        ).first()
 
         if not user:
-            return {"error": "Invalid token"}, 404
+            return {"error": "Invalid token or email"}, 404
 
-        if user.verification_token_expiry and user.verification_token_expiry < datetime.utcnow():
+        if user.verification_token_expiry < datetime.utcnow():
             return {"error": "Token has expired"}, 403
 
         user.is_verified = True
@@ -90,7 +94,13 @@ class VerifyEmail(Resource):
         user.verification_token_expiry = None
         db.session.commit()
 
-        return {"message": "Email verified successfully"}, 200
+        # Automatically log user in after verification
+        access_token = create_access_token(identity=user.id)
+        return {
+            "message": "Email verified successfully",
+            "access_token": access_token,
+            "user": user.to_dict()
+        }, 200
 # resend verification    
 class ResendVerification(Resource):
     def post(self):

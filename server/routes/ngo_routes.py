@@ -1,8 +1,9 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from server.models import User, DonationRequest, Donation
+from server.models import User, DonationRequest, Donation,Category
 from server.extensions import db
+
 
 ngo_bp = Blueprint('ngo', __name__)
 ngo_api = Api(ngo_bp)
@@ -44,3 +45,13 @@ class CreateDonationRequest(Resource):
         db.session.commit()
 
         return donation_request.to_dict(), 201
+
+class MyDonationRequests(Resource):
+    @jwt_required()
+    def get(self):
+        user_id = get_jwt_identity()
+        if not is_ngo(user_id):
+            return {"error": "Only NGOs can view their requests"}, 403
+
+        requests = DonationRequest.query.filter_by(ngo_id=user_id).all()
+        return [r.to_dict() for r in requests], 200

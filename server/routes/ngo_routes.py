@@ -55,3 +55,21 @@ class MyDonationRequests(Resource):
 
         requests = DonationRequest.query.filter_by(ngo_id=user_id).all()
         return [r.to_dict() for r in requests], 200
+    
+class DonationsToMyRequests(Resource):
+    @jwt_required()
+    def get(self):
+        user_id = get_jwt_identity()
+        if not is_ngo(user_id):
+            return {"error": "Only NGOs can view this"}, 403
+
+        # Get request IDs created by this NGO
+        my_request_ids = db.session.query(DonationRequest.id).filter_by(ngo_id=user_id).all()
+        my_request_ids = [r[0] for r in my_request_ids]
+
+        donations = Donation.query.filter(Donation.donation_request_id.in_(my_request_ids)).all()
+        return [d.to_dict() for d in donations], 200
+
+ngo_api.add_resource(CreateDonationRequest, '/ngo/requests')
+ngo_api.add_resource(MyDonationRequests, '/ngo/my-requests')
+ngo_api.add_resource(DonationsToMyRequests, '/ngo/donations-received')

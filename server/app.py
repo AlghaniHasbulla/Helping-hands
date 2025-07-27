@@ -18,6 +18,7 @@ from server.routes.admin_approvals import admin_approval_bp
 from server.routes.super_admin import super_admin_bp
 from server.routes.events_routes import event_bp
 from server.routes.cause_route import cause_bp
+from server.routes.ngo_routes import ngo_bp
 
 
 load_dotenv()
@@ -58,6 +59,7 @@ def create_app(testing=False):
     app.register_blueprint(super_admin_bp)
     app.register_blueprint(cause_bp)
     app.register_blueprint(event_bp)
+    app.register_blueprint(ngo_bp)
 
     return app
 app = create_app()

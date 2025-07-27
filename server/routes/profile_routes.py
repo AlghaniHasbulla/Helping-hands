@@ -9,6 +9,8 @@ from server.services.cloudinary_service import upload_image
 profile_bp = Blueprint('profile', __name__)
 api = Api(profile_bp)
 
+# profile_routes.py - Update ProfileResource
+
 class ProfileResource(Resource):
     @jwt_required()
     def get(self):
@@ -34,22 +36,23 @@ class ProfileResource(Resource):
         if not user:
             return {"error": "User not found"}, 404
 
-        data = request.form or request.get_json()
-
+        data = request.form
         
-        if 'full_name' in data:
-            user.full_name = data['full_name']
-
-       
-        if 'password' in data:
-            user.set_password(data['password'])
-
-       
+        # Handle file upload
         if 'avatar' in request.files:
             image_file = request.files['avatar']
-            avatar_url = upload_image(image_file)
-            user.avatar_url = avatar_url
-
+            upload_result, status_code = upload_image(image_file)
+            if status_code != 200:
+                return upload_result, status_code
+            user.avatar_url = upload_result['url']
+        
+        # Handle other fields
+        if "full_name" in data:
+            user.full_name = data["full_name"]
+        
+        if "password" in data and data["password"]:
+            user.set_password(data["password"])
+        
         db.session.commit()
         return {"msg": "Profile updated successfully"}, 200
 

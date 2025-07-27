@@ -13,6 +13,7 @@ import Causes from './components/Causes/Causes';
 import Events from './components/Events/Events';
 import About from './components/About/About';
 import Contacts from './components/Contacts/Contacts';
+import Profile from './components/Profile/Profile';
 
 
 const routes = () => {
@@ -31,6 +32,7 @@ const routes = () => {
       <Route path="/donate/:id" element={<DonationForm />} />
       <Route path="/donation-history" element={<DonationHistory />} />
       <Route path="/verify-email" element={<TokenValidation />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 }

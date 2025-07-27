@@ -19,4 +19,4 @@ def register_routes(app):
     app.register_blueprint(ngo_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(superadmin_bp)
-    app.register_blueprint()
+  

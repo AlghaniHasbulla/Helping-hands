@@ -10,6 +10,7 @@ from server.models import User
 from server.utils.validators import validate_register, validate_login
 from server.services.email_service import send_verification_email
 from datetime import datetime
+from server.services.cloudinary_service import upload_image
 
 # Blueprint setup
 auth_bp = Blueprint('auth', __name__)
@@ -154,9 +155,38 @@ class Dashboard(Resource):
                 "id": user.id,
                 "email": user.email,
                 "role": user.role,
-                "full_name": user.full_name
+                "full_name": user.full_name,
+                "avatar_url":user.avatar_url
             }
         }, 200
+    
+
+class UploadAvatar(Resource):
+    @jwt_required()
+    def post(self):
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+
+        if not user:
+            return {"msg": "User not found"}, 404
+
+        if 'avatar' not in request.files:
+            return {"error": "No file part in the request"}, 400
+
+        file = request.files['avatar']
+
+        if file.filename == '':
+            return {"error": "No selected file"}, 400
+
+        result, status_code = upload_image(file)
+        if status_code != 200:
+            return result, status_code
+
+        # Save avatar URL to user
+        user.avatar_url = result['url']
+        db.session.commit()
+
+        return {"message": "Avatar uploaded successfully", "avatar_url": user.avatar_url}, 200    
 
 # Register auth routes
 auth_api.add_resource(Register, '/register')
@@ -164,3 +194,5 @@ auth_api.add_resource(Login, '/login')
 auth_api.add_resource(VerifyEmail, '/verify-email')
 auth_api.add_resource(Dashboard, '/dashboard')
 auth_api.add_resource(ResendVerification, '/resend-verification')
+auth_api.add_resource(UploadAvatar, '/upload-avatar')
+

@@ -1,12 +1,12 @@
-from flask import Blueprint, request
+from flask import request
 from flask_restful import Api, Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from server.models.user import User
 from server.extensions import db
 from server.services.cloudinary_service import upload_image
+from . import profile_bp
 
-# Blueprint and API setup
-profile_bp = Blueprint('profile', __name__)
+
 api = Api(profile_bp)
 
 # profile_routes.py - Update ProfileResource

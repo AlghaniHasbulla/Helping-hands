@@ -1,14 +1,16 @@
-from flask import Blueprint, request
+from flask import request
 from flask_restful import Api, Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from server.models.user import User
 from server.extensions import db
 from server.utils.role_helpers import is_superadmin, log_admin_action
 from server.models.admin_action_log import AdminActionLog  
+from . import superadmin_bp
 
 
-super_admin_bp = Blueprint('super_admin', __name__)
-api = Api(super_admin_bp)
+
+
+api = Api(superadmin_bp)
 
 class UserListResource(Resource):
     @jwt_required()

@@ -1,13 +1,14 @@
-from flask import Blueprint, request
+from flask import  request
 from flask_restful import Api, Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
 from server.extensions import db
 from server.models.event import Event
 from server.models.user import User
+from . import events_bp
 
-event_bp = Blueprint('event', __name__)
-api = Api(event_bp)
+
+api = Api(events_bp)
 
 
 class PublicEventList(Resource):

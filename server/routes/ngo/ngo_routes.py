@@ -1,12 +1,12 @@
-from flask import Blueprint, request
+from flask import request
 from flask_restful import Api, Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from server.models import User, DonationRequest, Donation,Category
 from server.extensions import db
+from . import ngo_bp
 
 
-ngo_bp = Blueprint('ngo', __name__)
-ngo_api = Api(ngo_bp)
+api = Api(ngo_bp)
 
 def is_ngo(user_id):
     user = User.query.get(user_id)
@@ -70,6 +70,6 @@ class DonationsToMyRequests(Resource):
         donations = Donation.query.filter(Donation.donation_request_id.in_(my_request_ids)).all()
         return [d.to_dict() for d in donations], 200
 
-ngo_api.add_resource(CreateDonationRequest, '/ngo/requests')
-ngo_api.add_resource(MyDonationRequests, '/ngo/my-requests')
-ngo_api.add_resource(DonationsToMyRequests, '/ngo/donations-received')
+api.add_resource(CreateDonationRequest, '/ngo/requests')
+api.add_resource(MyDonationRequests, '/ngo/my-requests')
+api.add_resource(DonationsToMyRequests, '/ngo/donations-received')

@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import request
 from flask_restful import Api, Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from server.extensions import db
@@ -6,9 +6,10 @@ from server.models.donation import Donation
 from server.models.user import User
 from server.models.donation_request import DonationRequest
 from server.utils.helpers import paginate
+from . import donation_bp
 
-donations_bp = Blueprint('donations', __name__)
-api = Api(donations_bp)
+
+api = Api(donation_bp)
 
 class DonationCreateResource(Resource):
     @jwt_required()

@@ -1,11 +1,12 @@
-from flask import Blueprint, request
+from flask import request
 from flask_restful import Api, Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from server.extensions import db
 from server.models.cause import Cause
 from server.models.user import User
+from . import cause_bp
 
-cause_bp = Blueprint('cause', __name__)
+
 api = Api(cause_bp)
 
 

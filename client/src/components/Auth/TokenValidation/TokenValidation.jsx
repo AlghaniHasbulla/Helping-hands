@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { dispatchAuthEvent } from '../../../lib/utils';
 
 const TokenValidation = () => {
   const location = useLocation();
@@ -64,6 +65,10 @@ const TokenValidation = () => {
       if (response.status === 200) {
         localStorage.setItem('accessToken', response.data.access_token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
+        
+        // Dispatch authentication event
+        dispatchAuthEvent(response.data.user);
+        
         navigate('/dashboard');
       }
     } catch (err) {

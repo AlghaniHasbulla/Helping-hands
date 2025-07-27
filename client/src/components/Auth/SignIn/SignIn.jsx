@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { dispatchAuthEvent } from '../../../lib/utils';
+
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -31,12 +33,13 @@ const SignIn = () => {
       );
 
       if (response.status === 200) {
-        // Save token and user data to local storage
         localStorage.setItem('accessToken', response.data.access_token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
         
-        // Redirect to dashboard
-        navigate('/dashboard');
+        // Dispatch authentication event
+        dispatchAuthEvent(response.data.user);
+        
+        navigate('/');
       }
     } catch (err) {
       if (err.response?.data?.msg === "Email is not verified") {

@@ -47,7 +47,7 @@ def send_verification_email(user):
         </h2>
         <p>This code expires in 10 minutes.</p>
         <p>Alternatively, you can click this link to verify:</p>
-        <a href="http://localhost:5173/verify-email?token={token}">
+        <a href="http://localhost:5173/?token={token}">
             Verify Email
         </a>
     </body>

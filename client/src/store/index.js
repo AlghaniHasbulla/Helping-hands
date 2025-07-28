@@ -1,8 +1,22 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
+import { 
+    persistStore, 
+    persistReducer,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+
 import authReducer from './authSlice';
 import donationsReducer from './donationsSlice';
+import categoriesReducer from './categoriesSlice';
+import requestsReducer from './requestsSlice';
+import usersReducer from './usersSlice';
+import logsReducer from './logsSlice';
 
 const authPersistConfig = {
   key: 'auth',
@@ -14,10 +28,24 @@ const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 
 const store = configureStore({
   reducer: {
-    donations: donationsReducer,
+    
     auth: persistedAuthReducer,
+
+    donations: donationsReducer,  
+    categories: categoriesReducer,     
+    requests: requestsReducer,         
+    users: usersReducer,               
+    logs: logsReducer,                  
   },
+
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
+
 
 export const persistor = persistStore(store);
 

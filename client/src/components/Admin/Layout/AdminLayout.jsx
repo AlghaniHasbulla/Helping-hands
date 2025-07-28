@@ -11,7 +11,7 @@ const layoutStyle = {
 const mainContentStyle = {
   flexGrow: 1,
   padding: '2rem',
-  backgroundColor: '#f3f4f6' // var(--background-main)
+  backgroundColor: '#f3f4f6'
 };
 
 const AdminLayout = () => {

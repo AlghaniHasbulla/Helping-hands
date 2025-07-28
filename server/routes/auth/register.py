@@ -96,3 +96,5 @@ class Register(Resource):
             "msg": "Registration successful! Please check your email for verification instructions.",
             "email": new_user.email
         }, 201
+
+api.add_resource(Register, '/register')

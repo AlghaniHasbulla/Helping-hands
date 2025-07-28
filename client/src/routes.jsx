@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import SignUp from './components/Auth/SignUp/SignUp';
 import SignIn from './components/Auth/SignIn/SignIn';
@@ -15,11 +15,18 @@ import About from './components/About/About';
 import Contacts from './components/Contacts/Contacts';
 import Profile from './components/Profile/Profile';
 import PrivateRoute from './components/PrivateRoute';
+import AdminLayout from './components/Admin/Layout/AdminLayout';
+import AdminDashboard from './components/Admin/Pages/DashboardPage';
+import CategoryManagerPage from './components/Admin/Pages/CategoryManagerPage';
+import RequestQueuePage from './components/Admin/Pages/RequestQueuePage';
+import UserManagerPage from './components/Admin/Pages/UserManagerPage';
+import ActionLogViewer from './components/Admin/Pages/ActionLogViewer';
 
 
-const routes = () => {
+const AppRoutes = () => { // It's good practice to give components a capitalized name
   return (
     <Routes>
+      {/* --- PUBLIC AND GENERAL USER ROUTES --- */}
       <Route path="/" element={<Home />} />
       <Route path="/causes" element={<Causes />} />
       <Route path="/events" element={<Events />} />
@@ -27,6 +34,43 @@ const routes = () => {
       <Route path="/contacts" element={<Contacts />} />
       <Route path="/Sign-In" element={<SignIn />} />
       <Route path="/Sign-Up" element={<SignUp />} />
+      <Route path="/verify-email" element={<TokenValidation />} />
+      <Route path="/profile" element={<Profile />} />
+
+
+      
+      <Route 
+        path="/admin" 
+        element={
+          <PrivateRoute allowedRoles={['admin', 'superadmin']}>
+            <AdminLayout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<AdminDashboard />} /> 
+        <Route path="categories" element={<CategoryManagerPage />} />
+        <Route path="requests" element={<RequestQueuePage />} />
+
+        <Route 
+          path="users" 
+          element={
+            <PrivateRoute allowedRoles={['superadmin']}>
+              <UserManagerPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="logs" 
+          element={
+            <PrivateRoute allowedRoles={['superadmin']}>
+              <ActionLogViewer />
+            </PrivateRoute>
+          } 
+        />
+      </Route>
+
+
+      
       <Route 
         path="/donation-request" 
         element={
@@ -35,7 +79,8 @@ const routes = () => {
           </PrivateRoute>
         } 
       />
-      <Route 
+      
+       <Route 
         path="/ngo-requests" 
         element={
           <PrivateRoute allowedRoles={['ngo', 'admin']}>
@@ -67,10 +112,8 @@ const routes = () => {
           </PrivateRoute>
         } 
       />
-      <Route path="/verify-email" element={<TokenValidation />} />
-      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 }
 
-export default routes
+export default AppRoutes; 

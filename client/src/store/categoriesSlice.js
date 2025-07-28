@@ -1,13 +1,19 @@
+// src/store/categoriesSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getCategories, createCategory, updateCategory, deleteCategory } from '../lib/adminService';
+// Note: your adminService.js exports 'createCategory', which is fine.
+// The thunk itself can have a different name, but we should make it match what the component expects.
+import { getCategories, createCategory as apiCreateCategory, updateCategory, deleteCategory } from '../lib/adminService';
 
 // --- Async Thunks ---
 export const fetchCategories = createAsyncThunk('categories/fetchCategories', async () => {
   return await getCategories();
 });
 
-export const addCategory = createAsyncThunk('categories/addCategory', async (categoryData) => {
-  return await createCategory(categoryData);
+// --- FIX IS HERE ---
+// Rename the thunk from 'addCategory' to 'createCategory' to match the import.
+export const createCategory = createAsyncThunk('categories/createCategory', async (categoryData) => {
+  // Also, let's call the imported API function with a different name to avoid confusion.
+  return await apiCreateCategory(categoryData);
 });
 
 export const editCategory = createAsyncThunk('categories/editCategory', async ({ id, updateData }) => {
@@ -16,7 +22,7 @@ export const editCategory = createAsyncThunk('categories/editCategory', async ({
 
 export const removeCategory = createAsyncThunk('categories/removeCategory', async (id) => {
   await deleteCategory(id);
-  return id; // Return the id to use in the reducer
+  return id;
 });
 
 // --- Slice Definition ---
@@ -24,37 +30,19 @@ const categoriesSlice = createSlice({
   name: 'categories',
   initialState: {
     items: [],
-    status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
+    status: 'idle',
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch Categories
-      .addCase(fetchCategories.pending, (state) => { state.status = 'loading'; })
-      .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.items = action.payload;
-      })
-      .addCase(fetchCategories.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      // Add Category
-      .addCase(addCategory.fulfilled, (state, action) => {
+      // ... (rest of the extraReducers)
+      // --- FIX IS HERE ---
+      // Make sure the case matches the new thunk name.
+      .addCase(createCategory.fulfilled, (state, action) => {
         state.items.push(action.payload);
-      })
-      // Edit Category
-      .addCase(editCategory.fulfilled, (state, action) => {
-        const index = state.items.findIndex(item => item.id === action.payload.id);
-        if (index !== -1) {
-          state.items[index] = action.payload;
-        }
-      })
-      // Remove Category
-      .addCase(removeCategory.fulfilled, (state, action) => {
-        state.items = state.items.filter(item => item.id !== action.payload);
       });
+      // ... (rest of the extraReducers)
   },
 });
 

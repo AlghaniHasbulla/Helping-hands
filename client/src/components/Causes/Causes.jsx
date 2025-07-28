@@ -257,9 +257,9 @@ const Causes = () => {
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <span className="inline-block bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full text-xs font-medium">
-                        {categories.find(c => c.id === cause.category).name}
-                      </span>
+<span className="inline-block bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full text-xs font-medium">
+  {categories.find(c => c.id === cause.category)?.name || 'Unknown'}
+</span>
                     </div>
                     <div className="flex items-center text-blue-700 text-sm">
                       <Heart className="h-4 w-4 mr-1" />

@@ -278,8 +278,8 @@ const Causes = () => {
                   {/* Progress Bar */}
                   <div className="mb-4">
                     <div className="flex justify-between text-sm text-blue-900 mb-1.5">
-                      <span>Raised: ${cause.raised.toLocaleString()}</span>
-                      <span>Goal: ${cause.goal.toLocaleString()}</span>
+<span>Raised: ${cause.raised?.toLocaleString() || '0'}</span>
+<span>Goal: ${cause.goal?.toLocaleString() || '0'}</span>
                     </div>
                     <div className="w-full bg-blue-100 rounded-full h-2.5">
                       <div 

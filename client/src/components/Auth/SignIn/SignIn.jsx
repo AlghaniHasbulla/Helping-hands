@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { dispatchAuthEvent } from '../../../lib/utils';
-
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../../../store/authSlice';
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -38,6 +40,9 @@ const SignIn = () => {
         
         // Dispatch authentication event
         dispatchAuthEvent(response.data.user);
+
+        // Dispatch login success to Redux store
+        dispatch(loginSuccess({ user: response.data.user, accessToken: response.data.access_token }));
         
         navigate('/');
       }

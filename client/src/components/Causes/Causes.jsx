@@ -295,12 +295,12 @@ const Causes = () => {
                     <div className="text-blue-900 font-medium">
                       {Math.round((cause.raised / cause.goal) * 100)}% funded
                     </div>
-                    <Link 
-                      to={`/cause/${cause.id}`} 
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
-                    >
-                      Donate
-                    </Link>
+<Link 
+  to={`/donate/${cause.id}`} 
+  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+>
+  Donate
+</Link>
                   </div>
                 </div>
               </div>

@@ -1,4 +1,5 @@
-import api from './api';
+import api from './api'; 
+
 
 export const getCategories = async () => {
   const response = await api.get('/admin/categories');
@@ -17,8 +18,6 @@ export const deleteCategory = async (id) => {
   return response.data;
 };
 
-
-
 export const getPendingRequests = async () => {
     const response = await api.get('/admin/requests/pending');
     return response.data;
@@ -31,8 +30,6 @@ export const rejectRequest = async (id) => {
     const response = await api.patch(`/admin/requests/${id}/approve`, { is_approved: false });
     return response.data;
 };
-
-
 
 export const getAllUsers = async () => {
     const response = await api.get('/superadmin/users');
@@ -50,8 +47,6 @@ export const deleteUser = async (id) => {
     const response = await api.delete(`/superadmin/users/${id}`);
     return response.data;
 };
-
-
 
 export const getActionLogs = async () => {
     const response = await api.get('/superadmin/logs');

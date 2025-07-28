@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import api from '../lib/api';
 
 export const fetchApprovedRequests = createAsyncThunk(
   'donations/fetchApprovedRequests',
   async ({ page = 1, limit = 10 }, thunkAPI) => {
     try {
-      const response = await axios.get(`/requests?page=${page}&limit=${limit}`);
+      const response = await api.get(`/requests?page=${page}&limit=${limit}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -17,7 +17,7 @@ export const fetchNGORequests = createAsyncThunk(
   'donations/fetchNGORequests',
   async ({ ngoId, page = 1, limit = 10 }, thunkAPI) => {
     try {
-      const response = await axios.get(`/requests?page=${page}&limit=${limit}`);
+      const response = await api.get(`/requests?page=${page}&limit=${limit}`);
       const filtered = response.data.items.filter(req => req.ngo_id === ngoId);
       return { ...response.data, items: filtered };
     } catch (error) {
@@ -30,7 +30,7 @@ export const createDonationRequest = createAsyncThunk(
   'donations/createDonationRequest',
   async (requestData, thunkAPI) => {
     try {
-      const response = await axios.post('/requests', requestData);
+      const response = await api.post('/requests', requestData);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -42,7 +42,7 @@ export const makeDonation = createAsyncThunk(
   'donations/makeDonation',
   async (donationData, thunkAPI) => {
     try {
-      const response = await axios.post('/donate', donationData);
+      const response = await api.post('/donate', donationData);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -54,7 +54,7 @@ export const fetchDonationHistory = createAsyncThunk(
   'donations/fetchDonationHistory',
   async ({ page = 1, limit = 10 }, thunkAPI) => {
     try {
-      const response = await axios.get(`/donations?page=${page}&limit=${limit}`);
+      const response = await api.get(`/donations?page=${page}&limit=${limit}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);

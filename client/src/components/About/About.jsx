@@ -8,28 +8,34 @@ const About = () => {
   const teamMembers = [
     {
       id: 1,
-      name: 'Sarah Johnson',
+      name: 'George Evans',
       role: 'Founder & CEO',
       bio: 'Former nonprofit director with 15+ years in humanitarian work.'
     },
     {
       id: 2,
-      name: 'Michael Chen',
+      name: 'Isaac Juma',
       role: 'Technology Director',
       bio: 'Tech entrepreneur passionate about social impact solutions.'
     },
     {
       id: 3,
-      name: 'Amina Diallo',
+      name: 'Brian Okello',
       role: 'Partnership Manager',
       bio: 'Expert in building strategic alliances for social causes.'
     },
     {
       id: 4,
-      name: 'David Rodriguez',
+      name: 'Cornelius Chebet',
       role: 'Community Outreach',
       bio: 'Grassroots organizer with extensive community networks.'
-    }
+    },
+    {
+      id: 5,
+      name: 'Adrian Amoke',
+      role: 'Community Outreach',
+      bio: 'Grassroots organizer with extensive community networks.'
+    },
   ];
 
   return (

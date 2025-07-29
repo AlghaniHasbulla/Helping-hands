@@ -116,12 +116,19 @@ const Profile = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setAvatar(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setAvatarPreview(reader.result);
-      reader.readAsDataURL(file);
+      // Add file type check
+      if (!file.type.match('image.*')) {
+        setError('Please upload an image file (JPEG, PNG)');
+        return;
+      }
+      
+      // Add size check (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('File size too large (max 5MB)');
+        return;
+      }
     }
-  };
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

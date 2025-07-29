@@ -1,4 +1,4 @@
-from flask_restful import Resource
+from flask_restful import Resource, Api
 from flask import request
 from server.extensions import db
 from server.models import User
@@ -7,7 +7,9 @@ from server.services.email_service import send_verification_email
 from server.services.cloudinary_service import upload_image
 from datetime import datetime, timedelta
 import uuid
-import re
+from . import auth_bp
+
+api = Api(auth_bp)
 
 class Register(Resource):
     def post(self):
@@ -48,8 +50,10 @@ class Register(Resource):
         avatar_url = None
         if avatar_file:
             try:
-                upload_result = upload_image(avatar_file)
-                avatar_url = upload_result.get('url')
+                upload_result, status = upload_image(avatar_file)
+                if status != 200:
+                    return {"msg": upload_result.get('error')}, status  
+                avatar_url = upload_result['url']
             except Exception as e:
                 return {"msg": f"Avatar upload failed: {str(e)}"}, 500
 

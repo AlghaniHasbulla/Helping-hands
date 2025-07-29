@@ -44,8 +44,8 @@ const SignUp = () => {
         return;
       }
       
-      if (file.size > 2 * 1024 * 1024) {
-        setError('File size too large (max 2MB)');
+      if (file.size > 5 * 1024 * 1024) {
+        setError('File size too large (max 5MB)');
         return;
       }
       

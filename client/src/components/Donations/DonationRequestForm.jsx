@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDonationRequest } from '../../store/donationsSlice';
+import api from '../../lib/api';
 
 const DonationRequestForm = () => {
   const dispatch = useDispatch();
   const { createRequestStatus } = useSelector(state => state.donations);
+  const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -12,6 +14,18 @@ const DonationRequestForm = () => {
     category_id: '',
     amount_requested: '',
   });
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get('/categories');
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Failed to fetch categories', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,11 +84,9 @@ const DonationRequestForm = () => {
               required
             >
               <option value="">Select category</option>
-              {/* TODO: Replace with dynamic categories */}
-              <option value="1">Food</option>
-              <option value="2">Clothing</option>
-              <option value="3">Education</option>
-              <option value="4">Medical</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>{category.name}</option>
+              ))}
             </select>
           </div>
 

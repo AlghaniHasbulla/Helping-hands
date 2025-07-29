@@ -5,7 +5,7 @@ from server.models.donation_request import DonationRequest
 from server.models.user import User
 from server.extensions import db
 from . import admin_bp
-from server.app import swagger
+
 from server.utils.swagger_docs import jwt_required_docs
 
 

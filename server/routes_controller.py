@@ -7,7 +7,7 @@ from server.routes.events import events_bp
 from server.routes.ngo import ngo_bp
 from server.routes.profile import profile_bp
 from server.routes.superadmin import superadmin_bp
-
+from server.routes.category import category_bp
 
 def register_routes(app):
     app.register_blueprint(admin_bp)
@@ -19,4 +19,5 @@ def register_routes(app):
     app.register_blueprint(ngo_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(superadmin_bp)
+    app.register_blueprint(category_bp)
   

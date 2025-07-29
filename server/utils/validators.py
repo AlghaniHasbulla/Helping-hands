@@ -2,9 +2,6 @@ import re
 from urllib.parse import urlparse
 
 def validate_register(data):
-    # Required fields validation
-    if not data.get('full_name') or len(data['full_name'].strip()) < 2:
-        return False, "Full name must be at least 2 characters"
     
     # Email validation
     email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'

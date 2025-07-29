@@ -6,12 +6,38 @@ from server.extensions import db
 from server.models.event import Event
 from server.models.user import User
 from . import events_bp
-
+from flasgger import swag_from
 
 api = Api(events_bp)
 
 
 class PublicEventList(Resource):
+    @swag_from({
+        "tags": ["Events"],
+        "summary": "List Upcoming Public Events",
+        "description": "Fetches all upcoming events whose date is today or later.",
+        "responses": {
+            "200": {
+                "description": "List of upcoming events",
+                "schema": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "integer"},
+                            "title": {"type": "string"},
+                            "description": {"type": "string"},
+                            "location": {"type": "string"},
+                            "date": {"type": "string", "format": "date"},
+                            "image_url": {"type": "string"},
+                            "ngo_id": {"type": "integer"},
+                        }
+                    }
+                }
+            }
+        }
+    })
+
     def get(self):
         now = datetime.utcnow()
         events = Event.query.filter(Event.date >= now).all()
@@ -20,6 +46,49 @@ class PublicEventList(Resource):
 
 class EventCreate(Resource):
     @jwt_required()
+    @swag_from({
+        "tags": ["Events"],
+        "summary": "Create Event",
+        "description": "Admins or Super Admins can create new events.",
+        "security": [{"Bearer": []}],
+        "parameters": [
+            {
+                "name": "body",
+                "in": "body",
+                "required": True,
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "title": {"type": "string"},
+                        "description": {"type": "string"},
+                        "location": {"type": "string"},
+                        "date": {"type": "string", "example": "2025-08-15"},
+                        "image_url": {"type": "string"}
+                    },
+                    "required": ["title", "description", "location", "date"]
+                }
+            }
+        ],
+        "responses": {
+            "201": {
+                "description": "Event successfully created",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "integer"},
+                        "title": {"type": "string"},
+                        "description": {"type": "string"},
+                        "location": {"type": "string"},
+                        "date": {"type": "string"},
+                        "image_url": {"type": "string"},
+                        "ngo_id": {"type": "integer"}
+                    }
+                }
+            },
+            "403": {"description": "Unauthorized"},
+            "400": {"description": "Missing or invalid fields"}
+        }
+    })
     def post(self):
         user_id = get_jwt_identity()
         user = User.query.get_or_404(user_id)
@@ -48,6 +117,55 @@ class EventCreate(Resource):
 
 class EventUpdate(Resource):
     @jwt_required()
+    @swag_from({
+        "tags": ["Events"],
+        "summary": "Edit Event",
+        "description": "Allows an event creator (NGO) to update their own event.",
+        "security": [{"Bearer": []}],
+        "parameters": [
+            {
+                "name": "id",
+                "in": "path",
+                "required": True,
+                "type": "integer",
+                "description": "ID of the event to edit"
+            },
+            {
+                "name": "body",
+                "in": "body",
+                "required": True,
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "title": {"type": "string"},
+                        "description": {"type": "string"},
+                        "location": {"type": "string"},
+                        "date": {"type": "string", "example": "2025-08-20"},
+                        "image_url": {"type": "string"}
+                    }
+                }
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "Event updated successfully",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "integer"},
+                        "title": {"type": "string"},
+                        "description": {"type": "string"},
+                        "location": {"type": "string"},
+                        "date": {"type": "string"},
+                        "image_url": {"type": "string"},
+                        "ngo_id": {"type": "integer"}
+                    }
+                }
+            },
+            "403": {"description": "Unauthorized"},
+            "404": {"description": "Event not found"}
+        }
+    })
     def patch(self, id):
         user_id = get_jwt_identity()
         event = Event.query.get_or_404(id)

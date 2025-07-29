@@ -14,7 +14,7 @@ load_dotenv()
 def create_app(testing=False):
 
     app = Flask(__name__)
-    Swagger(app)
+   
     CORS(app,
          origins=["http://localhost:5173"],
          supports_credentials=True,
@@ -38,6 +38,7 @@ def create_app(testing=False):
     bcrypt.init_app(app)
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
+    swagger=Swagger(app)
     
     with app.app_context():
         from flask_migrate import upgrade

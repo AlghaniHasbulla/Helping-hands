@@ -5,6 +5,8 @@ from server.models.donation_request import DonationRequest
 from server.models.user import User
 from server.extensions import db
 from . import admin_bp
+from server.app import swagger
+from server.utils.swagger_docs import jwt_required_docs
 
 
 api = Api(admin_bp)
@@ -15,7 +17,48 @@ def is_admin(user_id):
 
 class DonationRequestApprovalResource(Resource):
     @jwt_required()
+    @jwt_required_docs(
+         summary="Approve/Disapprove Donation Request",
+        description="Allows an admin to approve or disapprove a donation request by ID.",
+        tags=["Admin"],
+        params=[
+            {
+                "name": "id",
+                "in": "path",
+                "type": "integer",
+                "required": True,
+                "description": "Donation Request ID"
+            }
+        ],
+        request_body={
+            "type": "object",
+            "properties": {
+                "is_approved": {
+                    "type": "boolean",
+                    "example": True
+                }
+            },
+            "required": ["is_approved"]
+        },
+        responses={
+            "200": {
+                "description": "Approval status updated",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "integer"},
+                        "is_approved": {"type": "boolean"}
+                    }
+                }
+            },
+            "403": {"description": "Only admins can approve donation requests"},
+            "404": {"description": "Donation request not found"},
+        }
+
+    )
+
     def patch(self, id):
+
         user_id = get_jwt_identity()
         if not is_admin(user_id):
             return {"error": "Only admins can approve donation requests."}, 403

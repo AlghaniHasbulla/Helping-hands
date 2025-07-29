@@ -12,9 +12,12 @@ const chartData = [
   { name: 'Community', Raised: 18900, Requests: 11 },
 ];
 
+import { useNavigate } from 'react-router-dom';
+
 const DashboardPage = () => {
     // Get the logged-in user's name from the auth slice
     const { user } = useSelector((state) => state.auth);
+    const navigate = useNavigate();
 
     return (
         <div>
@@ -22,6 +25,17 @@ const DashboardPage = () => {
             <p style={{ marginTop: '-2rem', color: 'var(--text-secondary)', marginBottom: '2rem'}}>
                 Here's a summary of the platform's activity.
             </p>
+
+            {user?.role === 'ngo' && (
+              <div className="mb-6">
+                <button
+                  onClick={() => navigate('/donation-request')}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                >
+                  Create Donation Request
+                </button>
+              </div>
+            )}
 
             {/* --- Stat Cards Section --- */}
             <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>

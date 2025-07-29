@@ -229,21 +229,21 @@ const SignUp = () => {
         <label htmlFor="role" className="block mb-1 text-sm font-medium text-blue-800">
           I am signing up as <span className="text-red-500">*</span>
         </label>
-        <select
-          id="role"
-          name="role"
-          value={formData.role}
-          onChange={handleChange}
-          className="w-full px-3 py-2 md:px-4 md:py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-          required
-        >
-          <option value="donor">Donor (Individual)</option>
-          <option value="charity">Charity Organization</option>
-          <option value="admin">Admin (Special Access)</option>
-        </select>
-        <p className="mt-1 text-xs text-blue-600">
-          * Admins need separate approval
-        </p>
+          <select
+            id="role"
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            className="w-full px-3 py-2 md:px-4 md:py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            required
+          >
+            <option value="donor">Donor (Individual)</option>
+            <option value="ngo">NGO</option>
+            <option value="admin">Admin (Special Access)</option>
+          </select>
+          <p className="mt-1 text-xs text-blue-600">
+            * Admins need separate approval
+          </p>
       </div>
 
       <div className="flex justify-between pt-2">

@@ -7,7 +7,8 @@ import os
 from flask_cors import CORS
 import logging
 from  server.routes_controller import register_routes
-
+from server.seed import seed
+from server.models.user import User
 load_dotenv()
 
 def create_app(testing=False):
@@ -32,6 +33,12 @@ def create_app(testing=False):
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
     
+    with app.app_context():
+        from flask_migrate import upgrade
+        upgrade()
+        seed()
+
+
     @app.route('/')
     def home():
         return {"message":"Welcome to helping hands api "}

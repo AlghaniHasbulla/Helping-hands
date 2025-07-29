@@ -9,8 +9,6 @@ const NGORequestsHistory = () => {
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  import { useSelector } from 'react-redux';
-
   const ngoId = useSelector(state => state.auth.user?.id);
 
   useEffect(() => {

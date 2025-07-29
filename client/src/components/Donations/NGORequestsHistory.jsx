@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchNGORequests } from '../../store/donationsSlice';
 import { formatDate } from '../../lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 const NGORequestsHistory = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { ngoRequests } = useSelector(state => state.donations);
   const [page, setPage] = useState(1);
   const limit = 10;
@@ -20,7 +22,15 @@ const NGORequestsHistory = () => {
   return (
     <div className="min-h-screen bg-blue-50 p-6">
       <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-3xl font-semibold text-blue-800 mb-6">Your Donation Requests</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-semibold text-blue-800">Your Donation Requests</h2>
+          <button
+            onClick={() => navigate('/donation-request')}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          >
+            Create Donation Request
+          </button>
+        </div>
         {ngoRequests.loading && <p>Loading...</p>}
         {ngoRequests.error && <p className="text-red-600">{ngoRequests.error}</p>}
         {!ngoRequests.loading && ngoRequests.items.length === 0 && <p>No donation requests found.</p>}

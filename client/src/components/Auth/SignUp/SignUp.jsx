@@ -99,11 +99,6 @@ const SignUp = () => {
       const response = await axios.post(
       'https://helping-hands-backend-w4pu.onrender.com/register',
       formDataToSend,
-      {
-        headers: {
-          'Content-Type': 'application/json' 
-        }
-      }
     );
 
       if (response.status === 201) {

@@ -14,7 +14,7 @@ def create_app(testing=False):
 
     app = Flask(__name__)
     Swagger(app)
-    CORS(app) 
+    CORS(app,origins=["http://localhost:5173"],supports_credentials=True) 
     app.config['SECRET_KEY'] = config("SECRET_KEY", default="super-secret")
     app.config['JWT_SECRET_KEY'] = config("JWT_SECRET_KEY", default="jwt-secret")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

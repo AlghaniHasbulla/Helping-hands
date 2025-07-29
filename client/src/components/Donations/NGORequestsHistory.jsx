@@ -9,12 +9,13 @@ const NGORequestsHistory = () => {
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  // TODO: Replace with actual logged-in NGO ID from auth state
-  const ngoId = 1;
+  import { useSelector } from 'react-redux';
+
+  const ngoId = useSelector(state => state.auth.user?.id);
 
   useEffect(() => {
-    dispatch(fetchNGORequests({ ngoId, page, limit }));
-  }, [dispatch, ngoId, page]);
+    dispatch(fetchNGORequests({ page, limit }));
+  }, [dispatch, page]);
 
   const totalPages = Math.ceil(ngoRequests.total / limit);
 

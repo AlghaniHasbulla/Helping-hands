@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,request
 from dotenv import load_dotenv
 from decouple import config
 from server.extensions import db, migrate, jwt,bcrypt
@@ -15,7 +15,13 @@ def create_app(testing=False):
 
     app = Flask(__name__)
     Swagger(app)
-    CORS(app,origins=["http://localhost:5173"],supports_credentials=True) 
+    CORS(app,
+         origins=["http://localhost:5173"],
+         supports_credentials=True,
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"], 
+         allow_headers=["Content-Type", "Authorization"]
+         
+         ) 
     app.config['SECRET_KEY'] = config("SECRET_KEY", default="super-secret")
     app.config['JWT_SECRET_KEY'] = config("JWT_SECRET_KEY", default="jwt-secret")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -37,6 +43,11 @@ def create_app(testing=False):
         from flask_migrate import upgrade
         upgrade()
         seed()
+    
+    # @app.before_request
+    # def handle_options():
+    #     if request.method == "OPTIONS":
+    #        return {}, 200
 
 
     @app.route('/')

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import StatCard from '../UI/StatCard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useNavigate } from 'react-router-dom';
+import api from '../../../lib/api';
 
 // Mock data for the chart. data is supposed to come from an API.
 const chartData = [
@@ -12,12 +14,43 @@ const chartData = [
   { name: 'Community', Raised: 18900, Requests: 11 },
 ];
 
-import { useNavigate } from 'react-router-dom';
-
 const DashboardPage = () => {
     // Get the logged-in user's name from the auth slice
     const { user } = useSelector((state) => state.auth);
     const navigate = useNavigate();
+
+    const [causes, setCauses] = useState([]);
+    const [donations, setDonations] = useState([]);
+    const [loadingCauses, setLoadingCauses] = useState(false);
+    const [loadingDonations, setLoadingDonations] = useState(false);
+    const [errorCauses, setErrorCauses] = useState(null);
+    const [errorDonations, setErrorDonations] = useState(null);
+
+    useEffect(() => {
+        if (user?.role === 'ngo') {
+            setLoadingCauses(true);
+            api.get('/ngo/my-requests')
+                .then(res => {
+                    setCauses(res.data);
+                    setLoadingCauses(false);
+                })
+                .catch(err => {
+                    setErrorCauses(err.message || 'Failed to load causes');
+                    setLoadingCauses(false);
+                });
+
+            setLoadingDonations(true);
+            api.get('/ngo/donations-received')
+                .then(res => {
+                    setDonations(res.data);
+                    setLoadingDonations(false);
+                })
+                .catch(err => {
+                    setErrorDonations(err.message || 'Failed to load donations');
+                    setLoadingDonations(false);
+                });
+        }
+    }, [user]);
 
     return (
         <div>
@@ -34,6 +67,62 @@ const DashboardPage = () => {
                 >
                   Create Donation Request
                 </button>
+              </div>
+            )}
+
+            {user?.role === 'ngo' && (
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Your Causes</h2>
+                {loadingCauses && <p>Loading causes...</p>}
+                {errorCauses && <p className="text-red-600">{errorCauses}</p>}
+                {!loadingCauses && !errorCauses && causes.length === 0 && <p>No causes found.</p>}
+                {!loadingCauses && !errorCauses && causes.length > 0 && (
+                  <table className="w-full table-auto border-collapse border border-gray-300 mb-8">
+                    <thead>
+                      <tr className="bg-blue-100 text-blue-800">
+                        <th className="border border-gray-300 px-4 py-2 text-left">Title</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">Category</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">Amount Requested</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">Approved</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {causes.map(cause => (
+                        <tr key={cause.id} className="hover:bg-blue-50">
+                          <td className="border border-gray-300 px-4 py-2">{cause.title}</td>
+                          <td className="border border-gray-300 px-4 py-2">{cause.category?.name || 'N/A'}</td>
+                          <td className="border border-gray-300 px-4 py-2">${cause.amount_requested.toFixed(2)}</td>
+                          <td className="border border-gray-300 px-4 py-2">{cause.is_approved ? 'Yes' : 'No'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+
+                <h2 className="text-xl font-semibold mb-4">Donations to Your Causes</h2>
+                {loadingDonations && <p>Loading donations...</p>}
+                {errorDonations && <p className="text-red-600">{errorDonations}</p>}
+                {!loadingDonations && !errorDonations && donations.length === 0 && <p>No donations found.</p>}
+                {!loadingDonations && !errorDonations && donations.length > 0 && (
+                  <table className="w-full table-auto border-collapse border border-gray-300">
+                    <thead>
+                      <tr className="bg-blue-100 text-blue-800">
+                        <th className="border border-gray-300 px-4 py-2 text-left">Donor Username</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">Amount</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">Donation Request</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {donations.map(donation => (
+                        <tr key={donation.id} className="hover:bg-blue-50">
+                          <td className="border border-gray-300 px-4 py-2">{donation.donor_username}</td>
+                          <td className="border border-gray-300 px-4 py-2">${donation.amount.toFixed(2)}</td>
+                          <td className="border border-gray-300 px-4 py-2">{donation.donation_request?.title || 'N/A'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             )}
 

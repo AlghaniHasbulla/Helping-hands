@@ -33,6 +33,10 @@ def is_file_size_okay(file):
 
 
 def upload_image(file):
+    
+    if not file or not file.filename:
+        return {"error": "No file provided"}, 400
+    
     try:
         if not allowed_file(file.filename):
             return {"error": "Invalid file type. Only images allowed (png, jpg, jpeg, gif)."}, 400
@@ -55,4 +59,3 @@ def upload_image(file):
     except Exception as e:
         print(f"Cloudinary upload error: {e}")
         return {"error": "Failed to upload image."}, 500
-

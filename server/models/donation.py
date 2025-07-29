@@ -14,7 +14,7 @@ class Donation(db.Model, SerializerMixin):
     donated_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # rships
-    donor = db.relationship('User', backref='donations', lazy=True)
+    donor = db.relationship('User', back_populates='donations', lazy=True)
     donation_request = db.relationship('DonationRequest', back_populates='donations', lazy=True)
 
     serialize_rules = (

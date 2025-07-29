@@ -43,3 +43,12 @@ def validate_register(data):
             return False, f"{field.capitalize()} handle is too long"
     
     return True, ""
+
+def validate_login(data):
+    if not data.get('email'):
+        return False, "Email is required"
+    
+    if not data.get('password'):
+        return False, "Password is required"
+    
+    return True, ""

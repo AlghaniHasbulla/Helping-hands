@@ -62,7 +62,7 @@ class User(db.Model, SerializerMixin):
 
     donations = db.relationship(
         'Donation', 
-        backref='donor', 
+        back_populates='donor', 
         lazy=True,
         order_by='desc(Donation.donated_at)'
     )

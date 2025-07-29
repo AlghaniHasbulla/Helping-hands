@@ -44,10 +44,10 @@ def create_app(testing=False):
         upgrade()
         seed()
     
-    # @app.before_request
-    # def handle_options():
-    #     if request.method == "OPTIONS":
-    #        return {}, 200
+    @app.before_request
+    def handle_options():
+        if request.method == "OPTIONS":
+           return {}, 200
 
 
     @app.route('/')

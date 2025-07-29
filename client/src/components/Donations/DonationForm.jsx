@@ -5,6 +5,7 @@ import { makeDonation } from '../../store/donationsSlice';
 const DonationForm = ({ donationRequestId }) => {
   const dispatch = useDispatch();
   const { makeDonationStatus } = useSelector(state => state.donations);
+  const userRole = useSelector(state => state.auth.user?.role);
 
   const [formData, setFormData] = useState({
     amount: '',
@@ -57,6 +58,12 @@ const DonationForm = ({ donationRequestId }) => {
           />
         </div>
 
+        {userRole === 'ngo' && (
+          <div className="p-4 bg-blue-100 rounded-lg text-blue-800">
+            <p>This is an NGO-specific feature or message.</p>
+          </div>
+        )}
+
         <button
           type="submit"
           disabled={makeDonationStatus.loading}
@@ -66,7 +73,9 @@ const DonationForm = ({ donationRequestId }) => {
         </button>
 
         {makeDonationStatus.error && (
-          <p className="text-red-600 mt-2">{makeDonationStatus.error}</p>
+          <p className="text-red-600 mt-2">
+            {typeof makeDonationStatus.error === 'object' ? makeDonationStatus.error.msg : makeDonationStatus.error}
+          </p>
         )}
       </form>
     </div>

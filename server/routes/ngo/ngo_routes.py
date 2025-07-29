@@ -68,7 +68,13 @@ class DonationsToMyRequests(Resource):
         my_request_ids = [r[0] for r in my_request_ids]
 
         donations = Donation.query.filter(Donation.donation_request_id.in_(my_request_ids)).all()
-        return [d.to_dict() for d in donations], 200
+        donations_with_donor = []
+        for d in donations:
+            donor = User.query.get(d.donor_id)
+            donation_dict = d.to_dict()
+            donation_dict['donor_username'] = donor.email if donor else 'Unknown'
+            donations_with_donor.append(donation_dict)
+        return donations_with_donor, 200
 
 api.add_resource(CreateDonationRequest, '/ngo/requests')
 api.add_resource(MyDonationRequests, '/ngo/my-requests')

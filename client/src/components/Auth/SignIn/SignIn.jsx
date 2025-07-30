@@ -41,6 +41,8 @@ const SignIn = () => {
       .then((payload) => {
         // Store user in localStorage
         localStorage.setItem('user', JSON.stringify(payload.user));
+        localStorage.setItem('accessToken', payload.access_token);
+        console.log('Access token stored:', payload.access_token);
         dispatchAuthEvent(payload.user);
 
         toast.success(`Welcome back, ${payload.user.full_name || payload.user.email}!`);

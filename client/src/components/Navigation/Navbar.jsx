@@ -86,7 +86,7 @@ const Navbar = () => {
       <div className={`${isMenuOpen ? 'block' : 'hidden'} md:flex absolute top-16 left-0 w-full bg-white shadow-lg z-10 md:static md:shadow-none md:space-x-6 md:w-auto`}>
         <div className="flex flex-col md:flex-row md:space-x-6 text-sm font-medium text-gray-600 px-4 py-4 md:py-0">
           <Link to="/" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent" onClick={() => setIsMenuOpen(false)}>Home</Link>
-          <Link to="/causes" onClick={handleCausesClick} className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent" onClickCapture={() => setIsMenuOpen(false)}>Causes</Link>
+          <Link to="/causes" onClick={(e) => { handleCausesClick(e); setIsMenuOpen(false); }} className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent">Causes</Link>
           <Link to="/events" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent" onClick={() => setIsMenuOpen(false)}>Events</Link>
           <Link to="/about" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent" onClick={() => setIsMenuOpen(false)}>About</Link>
           <Link to="/contacts" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent" onClick={() => setIsMenuOpen(false)}>Contact</Link>
@@ -110,4 +110,6 @@ const Navbar = () => {
     </nav>
   );
 };
+
+export default Navbar;
 

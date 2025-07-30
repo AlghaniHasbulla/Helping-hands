@@ -99,6 +99,12 @@ const Navbar = () => {
         ) : (
           <>
             <Link
+              to="/sign-up"
+              className="border border-blue-600 text-blue-600 px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-50 text-xs md:text-sm font-medium"
+            >
+              Create Account
+            </Link>
+            <Link
               to="/sign-in"
               className="border border-blue-600 text-blue-600 px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-50 text-xs md:text-sm font-medium"
             >

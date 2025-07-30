@@ -14,7 +14,7 @@ def validate_register(data):
         return False, "Password must be at least 8 characters"
     
     # Role validation
-    valid_roles = ['donor', 'charity', 'admin']
+    valid_roles = ['donor', 'admin', 'ngo']
     if data.get('role') not in valid_roles:
         return False, "Invalid role selection"
     

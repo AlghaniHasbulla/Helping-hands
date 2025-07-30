@@ -1,14 +1,12 @@
 from flask_restful import Resource, Api
-from flask import  request
-from flask_jwt_extended import (
-    create_access_token,
-)
+from flask import request
+from flask_jwt_extended import create_access_token
 from server.models import User
-from server.utils.validators import  validate_login
-from server.services.cloudinary_service import upload_image
+from server.utils.validators import validate_login
 from . import auth_bp
 
 api = Api(auth_bp)
+
 class Login(Resource):
     def post(self):
         data = request.get_json()
@@ -33,7 +31,12 @@ class Login(Resource):
                 "id": user.id,
                 "email": user.email,
                 "role": user.role,
-                "full_name": user.full_name
+                "full_name": user.full_name,
+                "avatar_url": user.avatar_url,  # ✅ ADD THIS LINE
+                "is_verified": user.is_verified,
+                "phone": user.phone,
+                "bio": user.bio,
+                # Add other fields you want available immediately after login
             }
         }, 200
     

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '@/assets/helpinghandsliogo.jpeg';
-import { User, LogOut } from 'lucide-react';
+import { dispatchAuthEvent } from '@/lib/utils'; // Add this import
 import ProfileDropdown from '../Profile/ProfileDropdown';
 
 const Navbar = () => {
@@ -12,17 +12,24 @@ const Navbar = () => {
 
   // Listen for authentication changes
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error('Error parsing user data:', e);
+    const updateUserFromStorage = () => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (e) {
+          console.error('Error parsing user data:', e);
+        }
+      } else {
+        setUser(null);
       }
-    }
-    
-    const handleAuthChange = (event) => {
-      setUser(event.detail.user);
+    };
+
+    // Initial read
+    updateUserFromStorage();
+
+    const handleAuthChange = () => {
+      updateUserFromStorage();
     };
     
     window.addEventListener('auth-change', handleAuthChange);
@@ -36,7 +43,7 @@ const Navbar = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
     setUser(null);
-    dispatchAuthEvent(null); // Notify other components
+    dispatchAuthEvent(); // Dispatch without payload
     navigate('/');
     setIsProfileMenuOpen(false);
   };

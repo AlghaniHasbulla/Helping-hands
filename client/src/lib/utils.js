@@ -4,9 +4,7 @@ export function formatDate(dateString) {
   return date.toLocaleDateString(undefined, options);
 }
 
-export const dispatchAuthEvent = (user) => {
-  const event = new CustomEvent('auth-change', {
-    detail: { user }
-  });
-  window.dispatchEvent(event);
-};
+export function dispatchAuthEvent() {
+  // Dispatch without payload to trigger storage re-read
+  window.dispatchEvent(new CustomEvent('auth-change'));
+}

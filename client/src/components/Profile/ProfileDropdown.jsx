@@ -1,7 +1,7 @@
-// src/components/ProfileDropdown.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, LogOut } from 'lucide-react';
+import { dispatchAuthEvent } from '@/lib/utils'; // Add this import
 
 const ProfileDropdown = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +10,8 @@ const ProfileDropdown = ({ user }) => {
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
-    window.dispatchEvent(new CustomEvent('auth-change', { detail: { user: null } }));
+    // Remove the payload from the event dispatch
+    dispatchAuthEvent(); // Changed to use the utility function
     navigate('/');
     setIsOpen(false);
   };

@@ -72,7 +72,15 @@ const DashboardPage = () => {
 
             {user?.role === 'ngo' && (
               <div>
-                <h2 className="text-xl font-semibold mb-4">Your Causes</h2>
+                <h2 className="text-xl font-semibold mb-4 flex justify-between items-center">
+                  Your Causes
+                  <button
+                    onClick={() => navigate('/donation-request')}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                  >
+                    Create Donation Request
+                  </button>
+                </h2>
                 {loadingCauses && <p>Loading causes...</p>}
                 {errorCauses && <p className="text-red-600">{errorCauses}</p>}
                 {!loadingCauses && !errorCauses && causes.length === 0 && <p>No causes found.</p>}
@@ -87,7 +95,7 @@ const DashboardPage = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {causes.map(cause => (
+                      {causes.filter(cause => cause.is_approved).map(cause => (
                         <tr key={cause.id} className="hover:bg-blue-50">
                           <td className="border border-gray-300 px-4 py-2">{cause.title}</td>
                           <td className="border border-gray-300 px-4 py-2">{cause.category?.name || 'N/A'}</td>

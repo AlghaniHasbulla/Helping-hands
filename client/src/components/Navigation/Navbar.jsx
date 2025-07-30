@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '@/assets/helpinghandsliogo.jpeg';
-import { dispatchAuthEvent } from '@/lib/utils'; // Add this import
+import { dispatchAuthEvent } from '@/lib/utils';
 import ProfileDropdown from '../Profile/ProfileDropdown';
 
 const Navbar = () => {
@@ -43,7 +43,7 @@ const Navbar = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
     setUser(null);
-    dispatchAuthEvent(); // Dispatch without payload
+    dispatchAuthEvent();
     navigate('/');
     setIsProfileMenuOpen(false);
   };
@@ -97,7 +97,13 @@ const Navbar = () => {
         {user ? (
           <ProfileDropdown user={user} />
         ) : (
-          <> 
+          <>
+            <Link
+              to="/donation-request"
+              className="hidden md:block bg-blue-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-700 text-xs md:text-sm font-medium"
+            >
+              Donate Now
+            </Link>
             <Link
               to="/sign-in"
               className="border border-blue-600 text-blue-600 px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-50 text-xs md:text-sm font-medium"
@@ -112,4 +118,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

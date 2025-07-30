@@ -19,7 +19,9 @@ const SignIn = () => {
   });
 
   const { status } = useSelector(state => state.auth); 
-  const isLoading = status === 'loading';
+
+  const [error, setError] = useState(''); // Added error state
+  const [isLoading, setIsLoading] = useState(false); // Added isLoading state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -67,6 +69,8 @@ const SignIn = () => {
         }
       })
       .catch((errorMessage) => {
+        setIsLoading(false);
+        setError(errorMessage); // Set error state here
         if (errorMessage === "Email is not verified") {
           navigate('/verify-email', { state: { email: formData.email } });
         } else {

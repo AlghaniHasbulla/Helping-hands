@@ -130,6 +130,9 @@ const Profile = () => {
         setError('File size too large (max 5MB)');
         return;
       }
+      setError('');
+      setAvatar(file);
+      setAvatarPreview(URL.createObjectURL(file));
     }
   }
 

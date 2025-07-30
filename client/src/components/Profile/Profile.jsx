@@ -50,7 +50,10 @@ const Profile = () => {
         const response = await axios.get(
           'https://helping-hands-backend-w4pu.onrender.com/profile',
           {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'  // Explicitly set content type
+            }
           }
         );
 
@@ -175,7 +178,10 @@ const Profile = () => {
         const profileResponse = await axios.get(
           'https://helping-hands-backend-w4pu.onrender.com/profile',
           {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'  // Explicitly set content type
+            }
           }
         );
         

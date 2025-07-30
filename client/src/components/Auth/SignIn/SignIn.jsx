@@ -36,16 +36,25 @@ const SignIn = () => {
 
       if (response.status === 200) {
         localStorage.setItem('accessToken', response.data.access_token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
         
-        // Dispatch authentication event
-        dispatchAuthEvent(response.data.user);
+        // Store complete user object with avatar_url
+        localStorage.setItem('user', JSON.stringify({
+          ...response.data.user,
+          avatar_url: response.data.user.avatar_url // Ensure avatar exists
+        }));
 
-        // Dispatch login success to Redux store
-        dispatch(loginSuccess({ user: response.data.user, accessToken: response.data.access_token }));
+        console.log(JSON.parse(localStorage.getItem('user')));
+
+        
+        dispatchAuthEvent(response.data.user);
+        dispatch(loginSuccess({ 
+          user: response.data.user, 
+          accessToken: response.data.access_token 
+        }));
         
         navigate('/');
       }
+
     } catch (err) {
       if (err.response?.data?.msg === "Email is not verified") {
         navigate('/verify-email', { state: { email: formData.email } });

@@ -51,9 +51,9 @@ const Profile = () => {
           'https://helping-hands-backend-w4pu.onrender.com/profile',
           {
             headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'  // Explicitly set content type
-            }
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'  // Explicitly set content type
+          }
           }
         );
 
@@ -130,9 +130,6 @@ const Profile = () => {
         setError('File size too large (max 5MB)');
         return;
       }
-      setError('');
-      setAvatar(file);
-      setAvatarPreview(URL.createObjectURL(file));
     }
   }
 

@@ -20,8 +20,8 @@ const SignIn = () => {
 
   const { status } = useSelector(state => state.auth); 
 
-  const [error, setError] = useState(''); // Added error state
-  const [isLoading, setIsLoading] = useState(false); // Added isLoading state
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,15 +41,24 @@ const SignIn = () => {
     dispatch(loginUser(credentials))
       .unwrap() 
       .then((payload) => {
-        // Store user in localStorage
-        localStorage.setItem('user', JSON.stringify(payload.user));
+        // Ensure we have the complete user object with avatar_url
+        const userWithAvatar = {
+          ...payload.user,
+          avatar_url: payload.user.avatar_url || null // Ensure avatar_url is explicitly set
+        };
+        
+        // Store complete user data in localStorage
+        localStorage.setItem('user', JSON.stringify(userWithAvatar));
         localStorage.setItem('accessToken', payload.access_token);
         console.log('Access token stored:', payload.access_token);
-        dispatchAuthEvent(payload.user);
-
-        toast.success(`Welcome back, ${payload.user.full_name || payload.user.email}!`);
+        console.log('User with avatar stored:', userWithAvatar);
         
-        switch (payload.user.role) {
+        // Dispatch auth event with complete user data
+        dispatchAuthEvent(userWithAvatar);
+
+        toast.success(`Welcome back, ${userWithAvatar.full_name || userWithAvatar.email}!`);
+        
+        switch (userWithAvatar.role) {
           case 'superadmin':
           case 'admin':
             navigate('/admin');
@@ -70,7 +79,7 @@ const SignIn = () => {
       })
       .catch((errorMessage) => {
         setIsLoading(false);
-        setError(errorMessage); // Set error state here
+        setError(errorMessage);
         if (errorMessage === "Email is not verified") {
           navigate('/verify-email', { state: { email: formData.email } });
         } else {

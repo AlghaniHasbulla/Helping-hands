@@ -1,24 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, LogOut } from 'lucide-react';
-import { dispatchAuthEvent } from '@/lib/utils'; // Add this import
+import { dispatchAuthEvent } from '@/lib/utils';
 
 const ProfileDropdown = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState(user?.avatar_url || null);
+  const [avatarUrl, setAvatarUrl] = useState(null);
+  const [imageError, setImageError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setAvatarUrl(user?.avatar_url || null);
+    const userAvatarUrl = user?.avatar_url;
+    console.log('ProfileDropdown: User avatar URL:', userAvatarUrl);
+    setAvatarUrl(userAvatarUrl || null);
+    setImageError(false); // Reset error state when avatar URL changes
   }, [user]);
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
-    // Remove the payload from the event dispatch
-    dispatchAuthEvent(); // Changed to use the utility function
+    dispatchAuthEvent();
     navigate('/');
     setIsOpen(false);
+  };
+
+  const handleImageError = () => {
+    console.log('ProfileDropdown: Image failed to load:', avatarUrl);
+    setImageError(true);
+  };
+
+  const renderAvatar = () => {
+    if (avatarUrl && !imageError) {
+      return (
+        <img 
+          src={avatarUrl} 
+          alt={user?.full_name || "User"} 
+          className="w-9 h-9 rounded-full object-cover border-2 border-blue-200"
+          onError={handleImageError}
+          onLoad={() => console.log('ProfileDropdown: Image loaded successfully:', avatarUrl)}
+        />
+      );
+    } else {
+      // Fallback to initials
+      const initials = user?.full_name ? user.full_name.charAt(0).toUpperCase() : "U";
+      return (
+        <div className="bg-blue-100 text-blue-800 w-9 h-9 rounded-full flex items-center justify-center font-medium">
+          {initials}
+        </div>
+      );
+    }
   };
 
   return (
@@ -27,19 +57,9 @@ const ProfileDropdown = ({ user }) => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center space-x-2 focus:outline-none"
       >
-        {avatarUrl ? (
-          <img 
-            src={avatarUrl} 
-            alt={user.full_name || "User"} 
-            className="w-9 h-9 rounded-full object-cover border-2 border-blue-200"
-          />
-        ) : (
-          <div className="bg-blue-100 text-blue-800 w-9 h-9 rounded-full flex items-center justify-center font-medium">
-            {user.full_name ? user.full_name.charAt(0) : "U"}
-          </div>
-        )}
+        {renderAvatar()}
         <span className="hidden md:inline text-blue-800 font-medium">
-          {user.full_name || "User"}
+          {user?.full_name || "User"}
         </span>
         <svg 
           xmlns="http://www.w3.org/2000/svg" 

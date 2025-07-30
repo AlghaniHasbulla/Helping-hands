@@ -6,6 +6,7 @@ from server.services.cloudinary_service import upload_image
 from . import profile_bp
 from server.models import User, Donation, DonationRequest
 from datetime import datetime
+from flask_cors import cross_origin
 
 
 
@@ -15,6 +16,8 @@ api = Api(profile_bp)
 
 class ProfileResource(Resource):
     @jwt_required()
+    @cross_origin(origins="http://localhost:5173", supports_credentials=True)
+    
     def get(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

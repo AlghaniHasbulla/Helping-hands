@@ -19,7 +19,7 @@ def create_app(testing=False):
          origins=["http://localhost:5173"],
          supports_credentials=True,
          methods=["GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"], 
-        #  allow_headers=["Content-Type", "Authorization"]
+         allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Credentials"]
          
          ) 
     app.config['SECRET_KEY'] = config("SECRET_KEY", default="super-secret")

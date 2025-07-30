@@ -50,12 +50,7 @@ const Events = () => {
             >
               Host an Event
             </Link>
-            <Link 
-              to="/volunteer" 
-              className="bg-transparent border-2 border-white hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition duration-300"
-            >
-              Become a Volunteer
-            </Link>
+           
           </div>
         </div>
       </div>
@@ -159,41 +154,6 @@ const Events = () => {
               </button>
             </div>
             
-            <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-              <h3 className="text-xl font-bold text-blue-900 mb-4">Volunteer Spotlight</h3>
-              <div className="flex items-center mb-4">
-                <div className="bg-blue-200 rounded-full w-16 h-16 flex items-center justify-center text-blue-800 font-bold mr-4">
-                  MJ
-                </div>
-                <div>
-                  <h4 className="font-bold text-blue-900">Maria Johnson</h4>
-                  <p className="text-blue-700">32 events participated</p>
-                </div>
-              </div>
-              <p className="text-blue-800 italic mb-4">
-                "Volunteering through Helping Hands has been one of the most rewarding experiences of my life."
-              </p>
-              <button className="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-lg transition-colors">
-                Become a Volunteer
-              </button>
-            </div>
-            
-            <div className="bg-gradient-to-r from-blue-500 to-blue-700 rounded-xl shadow-lg p-6 text-white">
-              <h3 className="text-xl font-bold mb-4">Subscribe to Events</h3>
-              <p className="mb-4 opacity-90">
-                Get notified about upcoming events in your area.
-              </p>
-              <div className="space-y-4">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="w-full px-4 py-3 rounded-lg text-blue-900"
-                />
-                <button className="w-full bg-white text-blue-700 hover:bg-blue-50 font-bold py-3 rounded-lg transition-colors">
-                  Subscribe
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -329,12 +329,6 @@ const Causes = () => {
               </div>
             </div>
             <div className="md:w-1/3 flex justify-center">
-              <Link 
-                to="/monthly-giving" 
-                className="bg-white text-blue-700 hover:bg-blue-50 font-bold py-3 px-8 rounded-full text-center transition-colors"
-              >
-                Learn More
-              </Link>
             </div>
           </div>
         </div>

@@ -16,11 +16,16 @@ const Navbar = () => {
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
         try {
-          setUser(JSON.parse(storedUser));
+          const parsedUser = JSON.parse(storedUser);
+          console.log('Navbar: User loaded from storage:', parsedUser);
+          console.log('Navbar: Avatar URL:', parsedUser.avatar_url);
+          setUser(parsedUser);
         } catch (e) {
           console.error('Error parsing user data:', e);
+          setUser(null);
         }
       } else {
+        console.log('Navbar: No user in storage');
         setUser(null);
       }
     };
@@ -28,7 +33,8 @@ const Navbar = () => {
     // Initial read
     updateUserFromStorage();
 
-    const handleAuthChange = () => {
+    const handleAuthChange = (event) => {
+      console.log('Navbar: Auth change event received:', event.detail);
       updateUserFromStorage();
     };
     

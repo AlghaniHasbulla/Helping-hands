@@ -1,10 +1,10 @@
-// src/Home.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, HandCoins, Users, Calendar, Globe, Star } from 'lucide-react';
 
 const Home = () => {
-  // Sample data for the home page
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+
   const featuredCauses = [
     {
       id: 1,
@@ -79,6 +79,37 @@ const Home = () => {
       rating: 5
     }
   ];
+
+  if (user && user.role === 'ngo') {
+    return (
+      <div className="bg-blue-50 min-h-screen p-8">
+        <h1 className="text-4xl font-bold text-blue-900 mb-6">Welcome, {user.full_name}</h1>
+        <p className="text-blue-700 mb-4 text-lg">
+          As an NGO, you can create and manage your donation requests, track donations received, and connect with donors.
+        </p>
+        <div className="space-y-4">
+          <Link
+            to="/ngo-causes"
+            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300"
+          >
+            Manage Your Causes
+          </Link>
+          <Link
+            to="/donation-request"
+            className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-bold py-3 px-6 rounded-lg transition duration-300"
+          >
+            Create Donation Request
+          </Link>
+          <Link
+            to="/ngo-requests-history"
+            className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300"
+          >
+            View Donation Requests History
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-blue-50">

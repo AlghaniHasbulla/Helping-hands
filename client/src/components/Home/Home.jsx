@@ -79,8 +79,28 @@ const Home = () => {
       rating: 5
     }
   ];
-
   if (user && user.role === 'ngo') {
+    const testimonials = [
+      {
+        id: 1,
+        name: 'Sarah Johnson',
+        role: 'Donor',
+        content: 'Helping Hands made it so easy to support causes I care about.',
+      },
+      {
+        id: 2,
+        name: 'Michael Chen',
+        role: 'Volunteer',
+        content: 'Volunteering through this platform connected me with amazing organizations.',
+      },
+      {
+        id: 3,
+        name: 'Amina Diallo',
+        role: 'Charity Director',
+        content: 'The support we received transformed our ability to serve the community.',
+      }
+    ];
+
     return (
       <div className="bg-blue-50 min-h-screen">
         {/* Hero Section */}
@@ -94,22 +114,13 @@ const Home = () => {
                 As an NGO, you can create and manage your donation requests, track donations received, and connect with donors.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link 
-                  to="/ngo-causes" 
-                  className="bg-transparent border-2 border-white hover:bg-blue-700 font-bold py-3 px-8 rounded-full text-center transition duration-300"
-                >
+                <Link to="/ngo-causes" className="bg-transparent border-2 border-white hover:bg-blue-700 font-bold py-3 px-8 rounded-full text-center transition duration-300">
                   Manage Your Causes
                 </Link>
-                <Link 
-                  to="/donation-request" 
-                  className="bg-white text-blue-700 hover:bg-blue-50 font-bold py-3 px-8 rounded-full text-center transition duration-300"
-                >
+                <Link to="/donation-request" className="bg-white text-blue-700 hover:bg-blue-50 font-bold py-3 px-8 rounded-full text-center transition duration-300">
                   Create Donation Request
                 </Link>
-                <Link 
-                  to="/ngo-requests-history" 
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-center transition duration-300"
-                >
+                <Link to="/ngo-requests-history" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-center transition duration-300">
                   View Donation Requests History
                 </Link>
               </div>
@@ -140,10 +151,9 @@ const Home = () => {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-4">Our Impact</h2>
               <p className="text-blue-700 max-w-2xl mx-auto">
-                Since 2015, we've connected donors with causes that transform lives and communities around the world.
+                Since 2015, we've connected donors with causes that transform lives and communities.
               </p>
             </div>
-            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-white p-8 rounded-xl shadow-md text-center">
                 <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -152,7 +162,6 @@ const Home = () => {
                 <h3 className="text-2xl font-bold text-blue-900 mb-2">$5.2M+</h3>
                 <p className="text-blue-700">Raised for Charities</p>
               </div>
-              
               <div className="bg-white p-8 rounded-xl shadow-md text-center">
                 <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Users className="text-blue-700 w-8 h-8" />
@@ -160,7 +169,6 @@ const Home = () => {
                 <h3 className="text-2xl font-bold text-blue-900 mb-2">250+</h3>
                 <p className="text-blue-700">Charities Supported</p>
               </div>
-              
               <div className="bg-white p-8 rounded-xl shadow-md text-center">
                 <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Globe className="text-blue-700 w-8 h-8" />
@@ -203,22 +211,14 @@ const Home = () => {
               <p className="text-blue-200 mb-6">
                 Connecting compassionate donors with causes that transform lives and communities.
               </p>
-              <div className="flex gap-4">
-                <a href="#" className="text-blue-200 hover:text-white">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
-                </a>
-                <a href="#" className="text-blue-200 hover:text-white">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10 5.523 0 10-4.477 10-10 0-5.523-4.477-10-10-10zm-1 15h-2v-7h2v7zm-1-8.272c-.619 0-1.126-.508-1.126-1.125 0-.619.507-1.127 1.126-1.127.62 0 1.126.508 1.126 1.127 0 .617-.507 1.125-1.126 1.125zm8 4.272h-1.5v3.5h-2v-3.5h-1v-2h1v-.75c0-1.034.62-1.75 1.5-1.75.62 0 1 .25 1 .25v1.5h-.875c-.125 0-.125.125-.125.125v.875h1.625l-.25 2z"/></svg>
-                </a>
-                <a href="#" className="text-blue-200 hover:text-white">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/></svg>
-                </a>
-              </div>
+              {/* Social icons here if needed */}
             </div>
-          </footer>
-        </div>
-      );
-    }
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
 
   return (
     <div className="bg-blue-50">
@@ -233,9 +233,8 @@ const Home = () => {
               Join thousands of compassionate people supporting causes that matter. Every contribution creates positive change.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-            
-              <Link 
-                to="/causes" 
+              <Link
+                to="/causes"
                 className="bg-transparent border-2 border-white hover:bg-blue-700 font-bold py-3 px-8 rounded-full text-center transition duration-300"
               >
                 Explore Causes
@@ -271,7 +270,7 @@ const Home = () => {
               Since 2015, we've connected donors with causes that transform lives and communities around the world.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-xl shadow-md text-center">
               <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -280,7 +279,7 @@ const Home = () => {
               <h3 className="text-2xl font-bold text-blue-900 mb-2">$5.2M+</h3>
               <p className="text-blue-700">Raised for Charities</p>
             </div>
-            
+
             <div className="bg-white p-8 rounded-xl shadow-md text-center">
               <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Users className="text-blue-700 w-8 h-8" />
@@ -288,7 +287,7 @@ const Home = () => {
               <h3 className="text-2xl font-bold text-blue-900 mb-2">250+</h3>
               <p className="text-blue-700">Charities Supported</p>
             </div>
-            
+
             <div className="bg-white p-8 rounded-xl shadow-md text-center">
               <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Globe className="text-blue-700 w-8 h-8" />
@@ -309,7 +308,7 @@ const Home = () => {
               Support these urgent initiatives making a real difference in people's lives.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {featuredCauses.map((cause) => (
               <div key={cause.id} className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
@@ -320,30 +319,21 @@ const Home = () => {
                 </div>
                 <div className="p-6">
                   <p className="text-blue-800 mb-4">{cause.description}</p>
-                  
+
                   <div className="mb-3">
                     <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div 
-                        className="bg-blue-600 h-2.5 rounded-full" 
+                      <div
+                        className="bg-blue-600 h-2.5 rounded-full"
                         style={{ width: `${cause.progress}%` }}
-
                       ></div>
                     </div>
                   </div>
-                  
+
                   <div className="flex justify-between text-blue-900 mb-4">
                     <span>${cause.raised.toLocaleString()} raised</span>
                     <span>${cause.goal.toLocaleString()} goal</span>
                   </div>
-                  
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-between text-blue-900 mb-4">
-                    <span>${cause.raised.toLocaleString()} raised</span>
-                    <span>${cause.goal.toLocaleString()} goal</span>
-                  </div>
-                  
+
                   <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition duration-300">
                     Donate Now
                   </button>
@@ -351,10 +341,10 @@ const Home = () => {
               </div>
             ))}
           </div>
-          
+
           <div className="text-center mt-12">
-            <Link 
-              to="/causes" 
+            <Link
+              to="/causes"
               className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-bold py-3 px-8 rounded-full transition duration-300"
             >
               View All Causes
@@ -372,7 +362,6 @@ const Home = () => {
               Making a difference has never been easier. Join us in three simple steps.
             </p>
           </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center p-6">
               <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">1</div>
@@ -381,7 +370,6 @@ const Home = () => {
                 Browse our verified charities and select a cause that resonates with you.
               </p>
             </div>
-            
             <div className="text-center p-6">
               <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">2</div>
               <h3 className="text-xl font-bold text-blue-900 mb-3">Make a Donation</h3>
@@ -389,7 +377,6 @@ const Home = () => {
                 Contribute any amount - every dollar makes a difference to those in need.
               </p>
             </div>
-            
             <div className="text-center p-6">
               <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">3</div>
               <h3 className="text-xl font-bold text-blue-900 mb-3">Track Impact</h3>
@@ -410,7 +397,6 @@ const Home = () => {
               Join our community events and make a hands-on difference.
             </p>
           </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {upcomingEvents.map((event) => (
               <div key={event.id} className="bg-white rounded-xl shadow-md overflow-hidden">
@@ -441,10 +427,9 @@ const Home = () => {
               </div>
             ))}
           </div>
-          
           <div className="text-center mt-12">
-            <Link 
-              to="/events" 
+            <Link
+              to="/events"
               className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300"
             >
               See All Events
@@ -452,7 +437,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-   
+
       {/* Call to Action */}
       <section className="py-20 bg-blue-600 px-4">
         <div className="max-w-5xl mx-auto text-center">
@@ -463,14 +448,14 @@ const Home = () => {
             Join our community of changemakers today. Together, we can create a better world for everyone.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link 
-              to="/sign-up" 
+            <Link
+              to="/sign-up"
               className="bg-white text-blue-700 hover:bg-blue-50 font-bold py-3 px-8 rounded-full transition duration-300"
             >
               Create Account
             </Link>
-            <Link 
-              to="/causes" 
+            <Link
+              to="/causes"
               className="bg-transparent border-2 border-white hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300"
             >
               Browse Causes
@@ -494,23 +479,23 @@ const Home = () => {
             </p>
             <div className="flex gap-4">
               <a href="#" className="text-blue-200 hover:text-white">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" /></svg>
               </a>
               <a href="#" className="text-blue-200 hover:text-white">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10 5.523 0 10-4.477 10-10 0-5.523-4.477-10-10-10zm-1 15h-2v-7h2v7zm-1-8.272c-.619 0-1.126-.508-1.126-1.125 0-.619.507-1.127 1.126-1.127.62 0 1.126.508 1.126 1.127 0 .617-.507 1.125-1.126 1.125zm8 4.272h-1.5v3.5h-2v-3.5h-1v-2h1v-.75c0-1.034.62-1.75 1.5-1.75.62 0 1 .25 1 .25v1.5h-.875c-.125 0-.125.125-.125.125v.875h1.625l-.25 2z"/></svg>
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10 5.523 0 10-4.477 10-10 0-5.523-4.477-10-10-10zm-1 15h-2v-7h2v7zm-1-8.272c-.619 0-1.126-.508-1.126-1.125 0-.619.507-1.127 1.126-1.127.62 0 1.126.508 1.126 1.127 0 .617-.507 1.125-1.126 1.125zm8 4.272h-1.5v3.5h-2v-3.5h-1v-2h1v-.75c0-1.034.62-1.75 1.5-1.75.62 0 1 .25 1 .25v1.5h-.875c-.125 0-.125.125-.125.125v.875h1.625l-.25 2z" /></svg>
               </a>
               <a href="#" className="text-blue-200 hover:text-white">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/></svg>
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
               </a>
               <a href="#" className="text-blue-200 hover:text-white">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" /></svg>
               </a>
             </div>
           </div>
-        
-          
-          
-          
+
+
+
+
           <div>
             <h3 className="text-lg font-bold mb-6">Contact Us</h3>
             <ul className="space-y-3 text-blue-200">
@@ -536,12 +521,12 @@ const Home = () => {
             </ul>
           </div>
         </div>
-        
+
         <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-blue-800 text-center text-blue-400">
           <p>© 2025 Helping Hands. All rights reserved. Charity Registration #12345-67</p>
         </div>
-      </footer>
-    </div>
+      </footer >
+    </div >
   );
 };
 

@@ -85,7 +85,7 @@ def seed():
 
     # Causes (30)
     causes_to_add = []
-    for i in range(30):
+    for i in range(20):
         title = fake.sentence(nb_words=4)
         if not Cause.query.filter_by(title=title).first():
             causes_to_add.append(Cause(
@@ -104,7 +104,7 @@ def seed():
 
     # Events (30)
     events_to_add = []
-    for i in range(30):
+    for i in range(20):
         title = fake.catch_phrase()
         if not Event.query.filter_by(title=title).first():
             events_to_add.append(Event(

@@ -87,6 +87,6 @@ Built as a team project with a clean split between frontend and backend responsi
 
 ### Frontend
 ```bash
-cd frontend
+cd cllient
 npm install
 npm run dev

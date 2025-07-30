@@ -1,23 +1,25 @@
 .admin-sidebar {
   width: 260px;
   background-color: #1f2937; 
-  color: #d1d5db;
+  color: #d1d5db; 
   display: flex;
   flex-direction: column;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  border-radius: 0.5rem; 
 }
 
 .sidebar-header {
   padding: 1.5rem;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #374151;
+  border-bottom: 1px solid #374151; 
 }
 
 .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0 0 0 10px;
-  color: #ffffff;
+  color: #ffffff; 
 }
 
 .sidebar-nav {
@@ -26,24 +28,34 @@
 }
 
 .sidebar-nav a {
-  display: block;
+  display: flex; 
+  align-items: center; 
   color: #d1d5db;
   text-decoration: none;
   padding: 12px 24px;
   margin: 4px 12px;
   border-radius: 6px;
   font-weight: 500;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.2s, transform 0.1s ease-in-out; 
+}
+
+.sidebar-nav a svg { 
+  margin-right: 0.75rem; 
+  width: 1.25rem; 
+  height: 1.25rem; 
 }
 
 .sidebar-nav a:hover {
-  background-color: #374151;
+  background-color: #374151; 
   color: #ffffff;
+  transform: translateX(3px); 
 }
 
 .sidebar-nav a.active {
-  background-color: var(--primary-blue);
+  background-color: #2563eb; 
   color: #ffffff;
+  font-weight: 600; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
 }
 
 .sidebar-separator {

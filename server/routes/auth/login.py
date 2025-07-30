@@ -32,12 +32,23 @@ class Login(Resource):
                 "email": user.email,
                 "role": user.role,
                 "full_name": user.full_name,
-                "avatar_url": getattr(user, "avatar_url", None),
+                "avatar_url": user.avatar_url,  # Make sure this is included
                 "is_verified": user.is_verified,
                 "phone": user.phone,
                 "bio": user.bio,
-                # Add other fields you want available immediately after login
+                "address": user.address,
+                "city": user.city,
+                "state": user.state,
+                "country": user.country,
+                "postal_code": user.postal_code,
+                "website": user.website,
+                "twitter": user.twitter,
+                "facebook": user.facebook,
+                "linkedin": user.linkedin,
+                "instagram": user.instagram,
+                "created_at": user.created_at.isoformat() if user.created_at else None,
+                "total_donations": user.total_donations or 0
             }
         }, 200
     
-api.add_resource(Login, '/login')
+api.add_resource(Login, '/login') 

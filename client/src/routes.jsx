@@ -17,6 +17,7 @@ import Profile from './components/Profile/Profile';
 import PrivateRoute from './components/PrivateRoute';
 import AdminLayout from './components/Admin/Layout/AdminLayout';
 import AdminDashboard from './components/Admin/Pages/DashboardPage';
+import DashboardPage from './components/Admin/Pages/DashboardPage';
 import CategoryManagerPage from './components/Admin/Pages/CategoryManagerPage';
 import RequestQueuePage from './components/Admin/Pages/RequestQueuePage';
 import UserManagerPage from './components/Admin/Pages/UserManagerPage';
@@ -39,35 +40,44 @@ const AppRoutes = () => { // It's good practice to give components a capitalized
 
 
       
-      <Route 
-        path="/admin" 
-        element={
-          <PrivateRoute allowedRoles={['admin', 'superadmin']}>
-            <AdminLayout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<AdminDashboard />} /> 
-        <Route path="categories" element={<CategoryManagerPage />} />
-        <Route path="requests" element={<RequestQueuePage />} />
+    <Route 
+      path="/admin" 
+      element={
+        <PrivateRoute allowedRoles={['admin', 'superadmin']}>
+          <AdminLayout />
+        </PrivateRoute>
+      }
+    >
+      <Route index element={<AdminDashboard />} /> 
+      <Route path="categories" element={<CategoryManagerPage />} />
+      <Route path="requests" element={<RequestQueuePage />} />
 
-        <Route 
-          path="users" 
-          element={
-            <PrivateRoute allowedRoles={['superadmin']}>
-              <UserManagerPage />
-            </PrivateRoute>
-          } 
-        />
-        <Route 
-          path="logs" 
-          element={
-            <PrivateRoute allowedRoles={['superadmin']}>
-              <ActionLogViewer />
-            </PrivateRoute>
-          } 
-        />
-      </Route>
+      <Route 
+        path="users" 
+        element={
+          <PrivateRoute allowedRoles={['superadmin']}>
+            <UserManagerPage />
+          </PrivateRoute>
+        } 
+      />
+      <Route 
+        path="logs" 
+        element={
+          <PrivateRoute allowedRoles={['superadmin']}>
+            <ActionLogViewer />
+          </PrivateRoute>
+        } 
+      />
+    </Route>
+
+    <Route 
+      path="/ngo-dashboard"
+      element={
+        <PrivateRoute allowedRoles={['ngo']}>
+          <DashboardPage />
+        </PrivateRoute>
+      }
+    />
 
 
       

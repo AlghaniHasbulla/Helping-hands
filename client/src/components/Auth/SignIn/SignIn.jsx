@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { dispatchAuthEvent } from '../../../lib/utils';
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../../../store/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+
+import { loginUser } from '../../../store/authThunks'; 
+
+const dispatchAuthEvent = (user) => {
+  const event = new CustomEvent('auth-change', { detail: { user } });
+  window.dispatchEvent(event);
+};
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -12,59 +17,60 @@ const SignIn = () => {
     email: '',
     password: '',
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+
+  const { status } = useSelector(state => state.auth); 
+  const isLoading = status === 'loading';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    try {
-      const response = await axios.post(
-        'https://helping-hands-backend-w4pu.onrender.com/login',
-        {
-          email: formData.email,
-          password: formData.password
+    const credentials = {
+      email: formData.email,
+      password: formData.password,
+    };
+
+    dispatch(loginUser(credentials))
+      .unwrap() 
+      .then((payload) => {
+        // Store user in localStorage
+        localStorage.setItem('user', JSON.stringify(payload.user));
+        dispatchAuthEvent(payload.user);
+
+        toast.success(`Welcome back, ${payload.user.full_name || payload.user.email}!`);
+        
+        switch (payload.user.role) {
+          case 'superadmin':
+          case 'admin':
+            navigate('/admin');
+            break;
+          
+          case 'ngo':
+            navigate('/'); 
+            break;
+
+          case 'donor':
+            navigate('/'); 
+            break;
+
+          default:
+            navigate('/'); 
+            break;
         }
-      );
-
-      if (response.status === 200) {
-        localStorage.setItem('accessToken', response.data.access_token);
-        
-        // Store complete user object with avatar_url
-        localStorage.setItem('user', JSON.stringify({
-          ...response.data.user,
-          avatar_url: response.data.user.avatar_url // Ensure avatar exists
-        }));
-
-        console.log(JSON.parse(localStorage.getItem('user')));
-
-        
-        dispatchAuthEvent(response.data.user);
-        dispatch(loginSuccess({ 
-          user: response.data.user, 
-          accessToken: response.data.access_token 
-        }));
-        
-        navigate('/');
-      }
-
-    } catch (err) {
-      if (err.response?.data?.msg === "Email is not verified") {
-        navigate('/verify-email', { state: { email: formData.email } });
-      } else {
-        setError(err.response?.data?.msg || 'Login failed. Please try again.');
-      }
-      console.error('Login error:', err);
-    } finally {
-      setIsLoading(false);
-    }
+      })
+      .catch((errorMessage) => {
+        if (errorMessage === "Email is not verified") {
+          navigate('/verify-email', { state: { email: formData.email } });
+        } else {
+          toast.error(errorMessage || 'Login failed. Please try again.');
+        }
+      });
   };
 
   return (

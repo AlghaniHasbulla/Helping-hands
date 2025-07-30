@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, LogOut } from 'lucide-react';
 import { dispatchAuthEvent } from '@/lib/utils'; // Add this import
 
 const ProfileDropdown = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(user?.avatar_url || null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setAvatarUrl(user?.avatar_url || null);
+  }, [user]);
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
@@ -22,9 +27,9 @@ const ProfileDropdown = ({ user }) => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center space-x-2 focus:outline-none"
       >
-        {user.avatar_url ? (
+        {avatarUrl ? (
           <img 
-            src={user.avatar_url} 
+            src={avatarUrl} 
             alt={user.full_name || "User"} 
             className="w-9 h-9 rounded-full object-cover border-2 border-blue-200"
           />

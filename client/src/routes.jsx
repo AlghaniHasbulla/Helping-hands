@@ -16,16 +16,18 @@ import Contacts from './components/Contacts/Contacts';
 import Profile from './components/Profile/Profile';
 import PrivateRoute from './components/PrivateRoute';
 import AdminLayout from './components/Admin/Layout/AdminLayout';
-import AdminDashboard from './components/Admin/Pages/DashboardPage';
+// Corrected import: Use DashboardPage consistently
 import DashboardPage from './components/Admin/Pages/DashboardPage';
 import NGOCauses from './components/NGO/NGOCauses';
-import CategoryManagerPage from './components/Admin/Pages/CategoryManagerPage';
-import RequestQueuePage from './components/Admin/Pages/RequestQueuePage';
+// Corrected import: Use CategoryManagementPage
+import CategoryManagementPage from './components/Admin/Pages/CategoryManagementPage';
+// Corrected import: Use ApproveRequestsPage
+import ApproveRequestsPage from './components/Admin/Pages/ApproveRequestsPage';
 import UserManagerPage from './components/Admin/Pages/UserManagerPage';
 import ActionLogViewer from './components/Admin/Pages/ActionLogViewer';
 
 
-const AppRoutes = () => { // It's good practice to give components a capitalized name
+const AppRoutes = () => {
   return (
     <Routes>
       {/* --- PUBLIC AND GENERAL USER ROUTES --- */}
@@ -40,41 +42,44 @@ const AppRoutes = () => { // It's good practice to give components a capitalized
       <Route path="/profile" element={<Profile />} />
 
 
-      
-    <Route 
-      path="/admin" 
+      {/* --- ADMIN ROUTES --- */}
+    <Route
+      path="/admin"
       element={
         <PrivateRoute allowedRoles={['admin', 'superadmin']}>
           <AdminLayout />
         </PrivateRoute>
       }
     >
-      <Route index element={<AdminDashboard />} /> 
-      <Route path="categories" element={<CategoryManagerPage />} />
-      <Route path="requests" element={<RequestQueuePage />} />
+      <Route index element={<DashboardPage />} /> {/* Using DashboardPage */}
+      <Route path="categories" element={<CategoryManagementPage />} /> {/* Using CategoryManagementPage */}
+      <Route path="requests" element={<ApproveRequestsPage />} /> {/* Using ApproveRequestsPage */}
 
-      <Route 
-        path="users" 
+      <Route
+        path="users"
         element={
           <PrivateRoute allowedRoles={['superadmin']}>
             <UserManagerPage />
           </PrivateRoute>
-        } 
+        }
       />
-      <Route 
-        path="logs" 
+      <Route
+        path="logs"
         element={
           <PrivateRoute allowedRoles={['superadmin']}>
             <ActionLogViewer />
           </PrivateRoute>
-        } 
+        }
       />
     </Route>
 
-      <Route 
+      {/* --- NGO ROUTES --- */}
+      <Route
         path="/ngo-dashboard"
         element={
           <PrivateRoute allowedRoles={['ngo']}>
+            {/* Note: DashboardPage is currently designed for Admin.
+                If NGO dashboard content differs, you might need a separate NGODashboardPage. */}
             <DashboardPage />
           </PrivateRoute>
         }
@@ -87,52 +92,50 @@ const AppRoutes = () => { // It's good practice to give components a capitalized
           </PrivateRoute>
         }
       />
-
-
-      
-      <Route 
-        path="/donation-request" 
+      <Route
+        path="/donation-request"
         element={
           <PrivateRoute allowedRoles={['ngo', 'admin']}>
             <DonationRequestForm />
           </PrivateRoute>
-        } 
+        }
       />
-      
-       <Route 
-        path="/ngo-requests" 
+       <Route
+        path="/ngo-requests"
         element={
           <PrivateRoute allowedRoles={['ngo', 'admin']}>
             <NGORequestsHistory />
           </PrivateRoute>
-        } 
+        }
       />
-      <Route 
-        path="/donor-home" 
+
+      {/* --- DONOR ROUTES --- */}
+      <Route
+        path="/donor-home"
         element={
           <PrivateRoute allowedRoles={['donor', 'admin']}>
             <DonorHome />
           </PrivateRoute>
-        } 
+        }
       />
-      <Route 
-        path="/donate/:id" 
+      <Route
+        path="/donate/:id"
         element={
           <PrivateRoute allowedRoles={['donor', 'admin']}>
             <DonationForm />
           </PrivateRoute>
-        } 
+        }
       />
-      <Route 
-        path="/donation-history" 
+      <Route
+        path="/donation-history"
         element={
           <PrivateRoute allowedRoles={['donor', 'admin']}>
             <DonationHistory />
           </PrivateRoute>
-        } 
+        }
       />
     </Routes>
   );
 }
 
-export default AppRoutes; 
+export default AppRoutes;

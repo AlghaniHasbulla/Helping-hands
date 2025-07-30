@@ -88,13 +88,7 @@ const Navbar = () => {
         {user ? (
           <ProfileDropdown user={user} />
         ) : (
-          <>
-            <Link
-              to="/donation-request"
-              className="hidden md:block bg-blue-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-700 text-xs md:text-sm font-medium"
-            >
-              Donate Now
-            </Link>
+          <> 
             <Link
               to="/sign-in"
               className="border border-blue-600 text-blue-600 px-3 py-1.5 md:px-4 md:py-2 rounded-md hover:bg-blue-50 text-xs md:text-sm font-medium"

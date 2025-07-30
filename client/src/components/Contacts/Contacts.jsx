@@ -73,7 +73,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-blue-900 mb-1">Call Us</h3>
-                    <p className="text-blue-700">+1 (555) 123-4567</p>
+                    <p className="text-blue-700">+254 123-4567</p>
                     <p className="text-blue-700">Mon-Fri: 9am-5pm EST</p>
                   </div>
                 </div>
@@ -85,25 +85,12 @@ const Contact = () => {
                   <div>
                     <h3 className="text-lg font-semibold text-blue-900 mb-1">Visit Us</h3>
                     <p className="text-blue-700">123 Charity Lane</p>
-                    <p className="text-blue-700">Compassion City, CA 90210</p>
+                    <p className="text-blue-700">Nairobi</p>
                   </div>
                 </div>
               </div>
               
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold text-blue-900 mb-4">Follow Us</h3>
-                <div className="flex space-x-4">
-                  {[...Array(4)].map((_, i) => (
-                    <a 
-                      key={i}
-                      href="#" 
-                      className="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center text-blue-700 hover:bg-blue-200 transition-colors"
-                    >
-                      <div className="bg-blue-300 rounded-full w-6 h-6"></div>
-                    </a>
-                  ))}
-                </div>
-              </div>
+            
             </div>
           </div>
           
@@ -254,19 +241,7 @@ const Contact = () => {
         </div>
       </div>
       
-      {/* Map Section */}
-      <div className="bg-blue-200 border-t border-b border-blue-300 py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl font-bold text-blue-900 mb-8 text-center">Our Locations</h2>
-          <div className="bg-blue-300 border-2 border-dashed border-blue-400 rounded-xl w-full h-96 flex items-center justify-center text-blue-700">
-            <div className="text-center">
-              <MapPin className="w-12 h-12 mx-auto mb-4" />
-              <p>Interactive Map</p>
-              <p className="text-sm mt-2">Showing our headquarters and regional offices</p>
-            </div>
-          </div>
-        </div>
-      </div>
+     
     </div>
   );
 };

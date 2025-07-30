@@ -108,9 +108,6 @@ const SignIn = () => {
               placeholder="Enter your password"
               required
             />
-            <div className="text-right mt-1">
-              <Link to="/forgot-password" className="text-xs md:text-sm text-blue-600 hover:text-blue-800 hover:underline">Forgot password?</Link>
-            </div>
           </div>
 
           <button 

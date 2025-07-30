@@ -18,6 +18,7 @@ import PrivateRoute from './components/PrivateRoute';
 import AdminLayout from './components/Admin/Layout/AdminLayout';
 import AdminDashboard from './components/Admin/Pages/DashboardPage';
 import DashboardPage from './components/Admin/Pages/DashboardPage';
+import NGOCauses from './components/NGO/NGOCauses';
 import CategoryManagerPage from './components/Admin/Pages/CategoryManagerPage';
 import RequestQueuePage from './components/Admin/Pages/RequestQueuePage';
 import UserManagerPage from './components/Admin/Pages/UserManagerPage';
@@ -70,14 +71,22 @@ const AppRoutes = () => { // It's good practice to give components a capitalized
       />
     </Route>
 
-    <Route 
-      path="/ngo-dashboard"
-      element={
-        <PrivateRoute allowedRoles={['ngo']}>
-          <DashboardPage />
-        </PrivateRoute>
-      }
-    />
+      <Route 
+        path="/ngo-dashboard"
+        element={
+          <PrivateRoute allowedRoles={['ngo']}>
+            <DashboardPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/ngo-causes"
+        element={
+          <PrivateRoute allowedRoles={['ngo']}>
+            <NGOCauses />
+          </PrivateRoute>
+        }
+      />
 
 
       

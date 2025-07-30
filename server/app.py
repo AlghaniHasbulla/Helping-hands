@@ -1,30 +1,44 @@
-from flask import Flask,request
+from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from decouple import config
-from server.extensions import db, migrate, jwt,bcrypt
+from server.extensions import db, migrate, jwt, bcrypt
 from flasgger import Swagger
 import os
 from flask_cors import CORS
 import logging
-from  server.routes_controller import register_routes
+from server.routes_controller import register_routes
 from server.seed import seed
 from server.models.user import User
+
 load_dotenv()
 
 def create_app(testing=False):
-
     app = Flask(__name__)
    
+    # Enhanced CORS configuration
     CORS(app,
-         origins=["http://localhost:5173"],
+         origins=[
+             "http://localhost:5173",
+             "http://localhost:3000",
+             "https://your-frontend-domain.com"  # Add your production domain here
+         ],
          supports_credentials=True,
-         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"], 
-         allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Credentials"]
-         
-         ) 
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"], 
+         allow_headers=[
+             "Content-Type", 
+             "Authorization", 
+             "Access-Control-Allow-Credentials",
+             "Access-Control-Allow-Origin",
+             "X-Requested-With",
+             "Accept"
+         ],
+         expose_headers=["Content-Type", "Authorization"]
+    ) 
+    
     app.config['SECRET_KEY'] = config("SECRET_KEY", default="super-secret")
     app.config['JWT_SECRET_KEY'] = config("JWT_SECRET_KEY", default="jwt-secret")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
     # Set the database URI based on testing mode
     if testing:
         app.config['SQLALCHEMY_DATABASE_URI'] = config("TEST_DATABASE_URL")
@@ -38,24 +52,41 @@ def create_app(testing=False):
     bcrypt.init_app(app)
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
-    swagger=Swagger(app)
+    swagger = Swagger(app)
     
     with app.app_context():
         from flask_migrate import upgrade
         upgrade()
         seed()
     
+    # Enhanced OPTIONS handling
     @app.before_request
-    def handle_options():
+    def handle_preflight():
         if request.method == "OPTIONS":
-           return {}, 200
+            response = jsonify({'status': 'OK'})
+            response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin', '*'))
+            response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization,X-Requested-With,Accept")
+            response.headers.add('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS,PATCH")
+            response.headers.add('Access-Control-Allow-Credentials', 'true')
+            return response, 200
 
+    # Add CORS headers to all responses
+    @app.after_request
+    def after_request(response):
+        origin = request.headers.get('Origin')
+        if origin in ["http://localhost:5173", "http://localhost:3000"]:
+            response.headers.add('Access-Control-Allow-Origin', origin)
+            response.headers.add('Access-Control-Allow-Credentials', 'true')
+            response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept')
+            response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH')
+        return response
 
     @app.route('/')
     def home():
-        return {"message":"Welcome to helping hands api "}
+        return {"message": "Welcome to helping hands api"}
     
     register_routes(app)
 
     return app
+
 app = create_app()

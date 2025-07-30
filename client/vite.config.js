@@ -15,5 +15,20 @@ export default defineConfig({
   },
   css: {
     postcss: './postcss.config.js' 
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://helping-hands-backend-w4pu.onrender.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        configure: (proxy, options) => {
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            console.log('Proxying request:', req.method, req.url);
+          });
+        }
+      }
+    }
   }
 })

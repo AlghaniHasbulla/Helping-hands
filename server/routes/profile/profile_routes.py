@@ -16,7 +16,7 @@ api = Api(profile_bp)
 
 class ProfileResource(Resource):
     @jwt_required()
-    @cross_origin(origins="http://localhost:5173", supports_credentials=True)
+    @cross_origin(origins="https://helpinghands-umber.vercel.app", supports_credentials=True)
     
     def get(self):
         user_id = get_jwt_identity()

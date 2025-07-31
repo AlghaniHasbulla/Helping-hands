@@ -33,7 +33,7 @@ class ProfileResource(Resource):
                         .add_columns(
                             DonationRequest.title,
                             DonationRequest.description,
-                            DonationRequest.image_url
+                          
                         )\
                         .order_by(Donation.donated_at.desc())\
                         .limit(5)\
@@ -47,7 +47,7 @@ class ProfileResource(Resource):
                 "donated_at": donation.donated_at.isoformat(),
                 "title": title,
                 "description": description,
-                "image_url": image_url
+                
             })
         import sys
         print("User object fields:", file=sys.stderr)

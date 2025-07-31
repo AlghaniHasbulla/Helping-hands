@@ -45,8 +45,32 @@ class DonationRequestListResource(Resource):
         page = int(request.args.get('page', 1))
         limit = int(request.args.get('limit', 10))
 
-        query = DonationRequest.query.filter_by(is_approved=True)
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+
+        if user.role == "admin" or user.role == "superadmin":
+            query = DonationRequest.query
+        else:
+            query = DonationRequest.query.filter_by(is_approved=True)
+
         paginated = paginate(query, page, limit)
+
+        # Add computed fields for admin UI
+        items = paginated.get('items', [])
+        for item in items:
+            # Add status field
+            if item.get('is_approved') is True:
+                item['status'] = 'Approved'
+            elif item.get('is_approved') is False:
+                item['status'] = 'Pending'
+            else:
+                item['status'] = 'Unknown'
+
+            # Add ngoName field
+            ngo = User.query.get(item.get('ngo_id'))
+            item['ngoName'] = ngo.name if ngo else 'N/A'
+
+        paginated['items'] = items
 
         return paginated, 200 
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchApprovedRequests } from '../../store/donationsSlice';
+import { fetchApprovedRequests, makeDonation } from '../../store/donationsSlice';
 import { formatDate } from '../../lib/utils';
 
 const categories = [
@@ -14,8 +14,12 @@ const categories = [
 const DonorHome = () => {
   const dispatch = useDispatch();
   const approvedRequests = useSelector(state => state.donations.approvedRequests) || { items: [], total: 0 };
+  const makeDonationStatus = useSelector(state => state.donations.makeDonationStatus);
   const [page, setPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [donationAmount, setDonationAmount] = useState('');
+  const [selectedRequestId, setSelectedRequestId] = useState(null);
+  const [showDonationForm, setShowDonationForm] = useState(false);
   const limit = 10;
 
   useEffect(() => {
@@ -28,6 +32,33 @@ const DonorHome = () => {
     : (approvedRequests.items || []);
 
   const totalPages = Math.ceil((approvedRequests.total || 0) / limit);
+
+  const openDonationForm = (requestId) => {
+    setSelectedRequestId(requestId);
+    setDonationAmount('');
+    setShowDonationForm(true);
+  };
+
+  const closeDonationForm = () => {
+    setSelectedRequestId(null);
+    setDonationAmount('');
+    setShowDonationForm(false);
+  };
+
+  const handleDonationSubmit = async (e) => {
+    e.preventDefault();
+    if (!donationAmount || isNaN(donationAmount) || Number(donationAmount) <= 0) {
+      alert('Please enter a valid donation amount.');
+      return;
+    }
+    try {
+      await dispatch(makeDonation({ donation_request_id: selectedRequestId, amount: Number(donationAmount) })).unwrap();
+      alert('Donation successful!');
+      closeDonationForm();
+    } catch (error) {
+      alert(`Donation failed: ${error.message || 'Unknown error'}`);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-blue-50 p-6">
@@ -60,9 +91,54 @@ const DonorHome = () => {
               <p className="text-blue-800 font-medium">Category: {req.category?.name || 'N/A'}</p>
               <p className="text-blue-800 font-medium">Amount Requested: ${req.amount_requested.toFixed(2)}</p>
               <p className="text-blue-600 text-sm">Created: {formatDate(req.created_at)}</p>
+              <button
+                onClick={() => openDonationForm(req.id)}
+                className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors duration-300"
+              >
+                Donate
+              </button>
             </li>
           ))}
         </ul>
+
+        {showDonationForm && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
+              <h3 className="text-xl font-semibold mb-4">Make a Donation</h3>
+              <form onSubmit={handleDonationSubmit}>
+                <div className="mb-4">
+                  <label htmlFor="donationAmount" className="block mb-1 font-medium">Amount</label>
+                  <input
+                    type="number"
+                    id="donationAmount"
+                    value={donationAmount}
+                    onChange={(e) => setDonationAmount(e.target.value)}
+                    min="0.01"
+                    step="0.01"
+                    className="w-full px-3 py-2 border border-gray-300 rounded"
+                    required
+                  />
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <button
+                    type="button"
+                    onClick={closeDonationForm}
+                    className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={makeDonationStatus.loading}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {makeDonationStatus.loading ? 'Donating...' : 'Donate'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
         {totalPages > 1 && (
           <div className="mt-6 flex justify-center space-x-2">

@@ -16,7 +16,7 @@ Built as a team project with a clean split between frontend and backend responsi
 | **George** | Backend | User models, JWT authentication, profile APIs, Cloudinary backend, category management|
 | **Brian** | Frontend | Authentication UI, Role-based routing, JWT session persistence, Redux Auth Slice |
 | **Adrian** | Frontend | Donation request forms, donor dashboard, donation history, pagination, Redux Donations Slice |
-| **Cornelius** | Frontend | Admin dashboard, category management, Cloudinary image upload UI, Recharts integration |
+| **Cornelius** | Frontend | Admin dashboard, category management, useState |
 
 
 

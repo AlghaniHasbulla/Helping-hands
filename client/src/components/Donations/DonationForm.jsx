@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { makeDonation } from '../../store/donationsSlice';
 
 const DonationForm = ({ donationRequestId }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { makeDonationStatus } = useSelector(state => state.donations);
   const userRole = useSelector(state => state.auth.user?.role);
 
@@ -24,6 +26,13 @@ const DonationForm = ({ donationRequestId }) => {
     e.preventDefault();
     dispatch(makeDonation({ donation_request_id: donationRequestId, amount: parseFloat(formData.amount), notes: formData.notes }));
   };
+
+  useEffect(() => {
+    if (!makeDonationStatus.loading && !makeDonationStatus.error && makeDonationStatus.loading !== null) {
+      // Navigate to donation history after successful donation
+      navigate('/donation-history');
+    }
+  }, [makeDonationStatus.loading, makeDonationStatus.error, navigate]);
 
   return (
     <div className="max-w-md p-6 bg-white rounded-xl shadow-lg">

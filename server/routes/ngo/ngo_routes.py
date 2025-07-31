@@ -46,6 +46,8 @@ class CreateDonationRequest(Resource):
 
         return donation_request.to_dict(), 201
 
+from server.utils.helpers import paginate
+
 class MyDonationRequests(Resource):
     @jwt_required()
     def get(self):
@@ -53,8 +55,13 @@ class MyDonationRequests(Resource):
         if not is_ngo(user_id):
             return {"error": "Only NGOs can view their requests"}, 403
 
-        requests = DonationRequest.query.filter_by(ngo_id=user_id).all()
-        return [r.to_dict() for r in requests], 200
+        page = int(request.args.get('page', 1))
+        limit = int(request.args.get('limit', 10))
+
+        query = DonationRequest.query.filter_by(ngo_id=user_id)
+        paginated = paginate(query, page, limit)
+
+        return paginated, 200
     
 class DonationsToMyRequests(Resource):
     @jwt_required()

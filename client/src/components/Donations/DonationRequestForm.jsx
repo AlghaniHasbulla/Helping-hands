@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDonationRequest } from '../../store/donationsSlice';
 import api from '../../lib/api';
+import { useNavigate } from 'react-router-dom';
 
 const DonationRequestForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { createRequestStatus } = useSelector(state => state.donations);
   const [categories, setCategories] = useState([]);
 
@@ -26,6 +28,20 @@ const DonationRequestForm = () => {
     };
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if (!createRequestStatus.loading && !createRequestStatus.error) {
+      // Clear form inputs on successful submission
+      setFormData({
+        title: '',
+        description: '',
+        category_id: '',
+        amount_requested: '',
+      });
+      // Navigate to NGORequestsHistory page
+      navigate('/ngo-requests-history');
+    }
+  }, [createRequestStatus, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -8,7 +8,7 @@ const AdminSidebar = () => {
   return (
     <aside className="admin-sidebar">
       <div className="sidebar-header">
-        <span className="logo-icon">🚀</span> 
+        <span className="logo-icon"></span> 
         <h2 className="logo-text">Helping Hands</h2>
       </div>
       <nav className="sidebar-nav">

@@ -50,31 +50,6 @@ const About = () => {
         </div>
       </div>
 
-      {/* Our Story */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-3xl font-bold text-blue-900 mb-6">Our Story</h2>
-            <p className="text-blue-800 mb-4">
-              Helping Hands was founded in 2015 with a simple mission: to make giving accessible, transparent, and impactful. 
-              What started as a small local initiative has grown into a global platform connecting millions of donors with 
-              thousands of verified charitable organizations.
-            </p>
-            <p className="text-blue-800 mb-4">
-              Our journey began when our founder, Sarah Johnson, witnessed firsthand the challenges charities faced in 
-              reaching potential supporters. She envisioned a platform that would bridge this gap while ensuring transparency 
-              and maximizing impact.
-            </p>
-            <p className="text-blue-800">
-              Today, we're proud to have facilitated over $25M in donations to causes around the world, supporting education, 
-              healthcare, environmental conservation, and humanitarian relief.
-            </p>
-          </div>
-          <div className="bg-blue-200 border-2 border-dashed border-blue-300 rounded-xl w-full h-96 flex items-center justify-center text-blue-700">
-            <span>Founding Team Photo</span>
-          </div>
-        </div>
-      </div>
 
       {/* Mission & Values */}
       <div className="bg-blue-100 py-16">

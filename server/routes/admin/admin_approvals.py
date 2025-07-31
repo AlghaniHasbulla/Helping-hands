@@ -11,7 +11,7 @@ from server.utils.swagger_docs import jwt_required_docs
 
 api = Api(admin_bp)
 
-def is_admin(user_id):
+def has_admin_privilege(user_id):
     user = User.query.get(user_id)
     return user and user.role in ['admin', 'superadmin']
 
@@ -19,7 +19,7 @@ class DonationRequestApprovalResource(Resource):
     @jwt_required()
     @jwt_required_docs(
          summary="Approve/Disapprove Donation Request",
-        description="Allows an admin to approve or disapprove a donation request by ID.",
+        description="Allows an admin or superadmin to approve or disapprove a donation request by ID.",
         tags=["Admin"],
         params=[
             {
@@ -60,8 +60,8 @@ class DonationRequestApprovalResource(Resource):
     def patch(self, id):
 
         user_id = get_jwt_identity()
-        if not is_admin(user_id):
-            return {"error": "Only admins can approve donation requests."}, 403
+        if not has_admin_privilege(user_id):
+            return {"error": "Only admins or superadmins can approve donation requests."}, 403
 
         donation_request = DonationRequest.query.get_or_404(id)
         data = request.get_json()

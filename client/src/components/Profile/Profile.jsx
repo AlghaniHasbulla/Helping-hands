@@ -412,16 +412,18 @@ const Profile = () => {
           >
             Personal Information
           </button>
-          <button
-            onClick={() => setActiveTab('donations')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeTab === 'donations' 
-                ? 'bg-blue-600 text-white' 
-                : 'bg-white text-blue-800 hover:bg-blue-50'
-            }`}
-          >
-            Donation History
-          </button>
+          {user.role !== 'ngo' && (
+            <button
+              onClick={() => setActiveTab('donations')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeTab === 'donations' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-white text-blue-800 hover:bg-blue-50'
+              }`}
+            >
+              Donation History
+            </button>
+          )}
           <button
             onClick={() => setActiveTab('security')}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${

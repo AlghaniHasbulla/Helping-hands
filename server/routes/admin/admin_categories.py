@@ -16,6 +16,10 @@ def is_admin(user_id):
 class CategoryListResource(Resource):
     @jwt_required()
     def get(self):
+        user_id = get_jwt_identity()
+        if not is_admin(user_id):
+            return {"error": "Only admins can view categories."}, 403
+
         return [c.to_dict() for c in Category.query.all()], 200
 
     @jwt_required()

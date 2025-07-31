@@ -14,31 +14,33 @@ load_dotenv()
 
 def create_app(testing=False):
     app = Flask(__name__)
-   
+
     # Enhanced CORS configuration
+    allowed_origins = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://helpinghands-umber.vercel.app"
+    ]
+
     CORS(app,
-         origins=[
-             "http://localhost:5173",
-             "http://localhost:3000",
-             "https://helpinghands-umber.vercel.app/" 
-         ],
+         origins=allowed_origins,
          supports_credentials=True,
-         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"], 
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
          allow_headers=[
-             "Content-Type", 
-             "Authorization", 
+             "Content-Type",
+             "Authorization",
              "Access-Control-Allow-Credentials",
              "Access-Control-Allow-Origin",
              "X-Requested-With",
              "Accept"
          ],
          expose_headers=["Content-Type", "Authorization"]
-    ) 
-    
+    )
+
     app.config['SECRET_KEY'] = config("SECRET_KEY", default="super-secret")
     app.config['JWT_SECRET_KEY'] = config("JWT_SECRET_KEY", default="jwt-secret")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
+
     # Set the database URI based on testing mode
     if testing:
         app.config['SQLALCHEMY_DATABASE_URI'] = config("TEST_DATABASE_URL")
@@ -53,28 +55,30 @@ def create_app(testing=False):
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
     swagger = Swagger(app)
-    
+
     with app.app_context():
         from flask_migrate import upgrade
         upgrade()
         seed()
-    
-    # Enhanced OPTIONS handling
+
+    # Enhanced OPTIONS preflight handler
     @app.before_request
     def handle_preflight():
         if request.method == "OPTIONS":
             response = jsonify({'status': 'OK'})
-            response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin', '*'))
-            response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization,X-Requested-With,Accept")
-            response.headers.add('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS,PATCH")
-            response.headers.add('Access-Control-Allow-Credentials', 'true')
+            origin = request.headers.get('Origin')
+            if origin in allowed_origins:
+                response.headers.add("Access-Control-Allow-Origin", origin)
+                response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization,X-Requested-With,Accept")
+                response.headers.add('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS,PATCH")
+                response.headers.add('Access-Control-Allow-Credentials', 'true')
             return response, 200
 
     # Add CORS headers to all responses
     @app.after_request
     def after_request(response):
         origin = request.headers.get('Origin')
-        if origin in ["http://localhost:5173", "http://localhost:3000"]:
+        if origin in allowed_origins:
             response.headers.add('Access-Control-Allow-Origin', origin)
             response.headers.add('Access-Control-Allow-Credentials', 'true')
             response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept')
@@ -84,7 +88,7 @@ def create_app(testing=False):
     @app.route('/')
     def home():
         return {"message": "Welcome to helping hands api"}
-    
+
     register_routes(app)
 
     return app

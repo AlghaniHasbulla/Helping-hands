@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { 
   User, Mail, Phone, Home, Globe, Calendar, CreditCard, 
   MapPin, BookOpen, Link, Twitter, Facebook, Linkedin, Instagram, 
@@ -8,7 +7,9 @@ import {
 } from 'lucide-react';
 
 const Profile = () => {
+  const BASE_URL = '/api';
   const navigate = useNavigate();
+  
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     full_name: '',
@@ -37,76 +38,113 @@ const Profile = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [donationStats, setDonationStats] = useState(null);
 
-  // Fetch user data
+  // Helper function to get auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('accessToken');
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
+  };
+
+  // Helper function to handle API responses
+  const handleResponse = async (response) => {
+    console.log(`API Response: ${response.status} ${response.statusText} for ${response.url}`);
+    
+    if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('user');
+        navigate('/sign-in');
+        throw new Error('Session expired. Please sign in again.');
+      }
+      
+      let errorData = {};
+      try {
+        errorData = await response.json();
+        console.log('Error response data:', errorData);
+      } catch (e) {
+        console.log('Could not parse error response as JSON');
+      }
+      
+      throw new Error(errorData.error || errorData.message || `HTTP error! status: ${response.status}`);
+    }
+    
+    return response.json();
+  };
+
+  // Fetch user profile data
+  const fetchProfile = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      console.log('Token exists:', !!token);
+      console.log('Token length:', token?.length);
+      
+      if (!token) {
+        console.log('No token found, redirecting to sign-in');
+        navigate('/sign-in');
+        return;
+      }
+
+      console.log('Making request to:', `${BASE_URL}/profile`);
+      const response = await fetch(`${BASE_URL}/profile`, {
+        method: 'GET',
+        headers: getAuthHeaders()
+      });
+
+      const userData = await handleResponse(response);
+      console.log('Profile data received:', userData);
+      
+      setUser(userData);
+      setFormData({
+        full_name: userData.full_name || '',
+        phone: userData.phone || '',
+        address: userData.address || '',
+        city: userData.city || '',
+        state: userData.state || '',
+        country: userData.country || '',
+        postal_code: userData.postal_code || '',
+        bio: userData.bio || '',
+        website: userData.website || '',
+        twitter: userData.twitter || '',
+        facebook: userData.facebook || '',
+        linkedin: userData.linkedin || '',
+        instagram: userData.instagram || '',
+        password: '',
+        confirmPassword: '',
+        current_password: ''
+      });
+      
+      if (userData.avatar_url) {
+        setAvatarPreview(userData.avatar_url);
+      }
+    } catch (err) {
+      console.error('Profile fetch error:', err);
+      setError(err.message || 'Failed to load profile data');
+    }
+  };
+
+  // Fetch donation statistics
+  const fetchDonationStats = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) return;
+
+      const response = await fetch(`${BASE_URL}/donations/stats`, {
+        method: 'GET',
+        headers: getAuthHeaders()
+      });
+
+      const stats = await handleResponse(response);
+      setDonationStats(stats);
+    } catch (err) {
+      console.error('Donation stats error:', err);
+      // Don't show error for donation stats as it's not critical
+    }
+  };
+
+  // Initialize component
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-          navigate('/sign-in');
-          return;
-        }
-
-        const response = await axios.get(
-          'https://helping-hands-backend-w4pu.onrender.com/profile',
-          {
-            headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'  // Explicitly set content type
-          }
-          }
-        );
-
-        if (response.status === 200) {
-          setUser(response.data);
-          setFormData({
-            full_name: response.data.full_name || '',
-            phone: response.data.phone || '',
-            address: response.data.address || '',
-            city: response.data.city || '',
-            state: response.data.state || '',
-            country: response.data.country || '',
-            postal_code: response.data.postal_code || '',
-            bio: response.data.bio || '',
-            website: response.data.website || '',
-            twitter: response.data.twitter || '',
-            facebook: response.data.facebook || '',
-            linkedin: response.data.linkedin || '',
-            instagram: response.data.instagram || '',
-            password: '',
-            confirmPassword: '',
-            current_password: ''
-          });
-          if (response.data.avatar_url) {
-            setAvatarPreview(response.data.avatar_url);
-          }
-        }
-      } catch (err) {
-        console.error('Profile fetch error:', err);
-        setError('Failed to load profile data');
-      }
-    };
-
-    const fetchDonationStats = async () => {
-      try {
-        const token = localStorage.getItem('accessToken');
-        if (!token) return;
-
-        const response = await axios.get(
-          'https://helping-hands-backend-w4pu.onrender.com/donations/stats',
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-
-        if (response.status === 200) {
-          setDonationStats(response.data);
-        }
-      } catch (err) {
-        console.error('Donation stats error:', err);
-      }
-    };
-
     fetchProfile();
     fetchDonationStats();
   }, [navigate]);
@@ -119,19 +157,30 @@ const Profile = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Add file type check
+      // Validate file type
       if (!file.type.match('image.*')) {
         setError('Please upload an image file (JPEG, PNG)');
         return;
       }
       
-      // Add size check (5MB)
+      // Validate file size (5MB)
       if (file.size > 5 * 1024 * 1024) {
         setError('File size too large (max 5MB)');
         return;
       }
+      
+      setAvatar(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setAvatarPreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+      
+      setError(''); // Clear any previous errors
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -148,11 +197,18 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem('accessToken');
+      if (!token) {
+        navigate('/sign-in');
+        return;
+      }
+
       const formDataToSend = new FormData();
       
-      // Append text fields
+      // Append text fields (only if they have values)
       Object.entries(formData).forEach(([key, value]) => {
-        if (value) formDataToSend.append(key, value);
+        if (value && key !== 'confirmPassword') {
+          formDataToSend.append(key, value);
+        }
       });
       
       // Append avatar if selected
@@ -160,39 +216,33 @@ const Profile = () => {
         formDataToSend.append('avatar', avatar);
       }
 
-      const response = await axios.put(
-        'https://helping-hands-backend-w4pu.onrender.com/profile',
-        formDataToSend,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      );
+      const response = await fetch(`${BASE_URL}/profile`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`
+          // Don't set Content-Type for FormData, let the browser set it
+        },
+        body: formDataToSend
+      });
 
-      if (response.status === 200) {
-        setSuccess('Profile updated successfully!');
-        
-        // Refetch updated profile
-        const profileResponse = await axios.get(
-          'https://helping-hands-backend-w4pu.onrender.com/profile',
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'  // Explicitly set content type
-            }
-          }
-        );
-        
-        if (profileResponse.status === 200) {
-          setUser(profileResponse.data);
-          localStorage.setItem('user', JSON.stringify(profileResponse.data));
-          window.dispatchEvent(new Event('auth-change'));
-        }
-      }
+      await handleResponse(response);
+      setSuccess('Profile updated successfully!');
+      
+      // Refetch updated profile
+      await fetchProfile();
+      
+      // Update localStorage and trigger auth change event
+      const updatedUser = await fetch(`${BASE_URL}/profile`, {
+        method: 'GET',
+        headers: getAuthHeaders()
+      }).then(handleResponse);
+      
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      window.dispatchEvent(new Event('auth-change'));
+      
     } catch (err) {
-      setError(err.response?.data?.error || 'Profile update failed. Please try again.');
+      console.error('Profile update error:', err);
+      setError(err.message || 'Profile update failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -204,20 +254,27 @@ const Profile = () => {
     
     try {
       const token = localStorage.getItem('accessToken');
-      await axios.delete(
-        'https://helping-hands-backend-w4pu.onrender.com/profile/delete',
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+      if (!token) {
+        navigate('/sign-in');
+        return;
+      }
+
+      const response = await fetch(`${BASE_URL}/profile/delete`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+      });
+
+      await handleResponse(response);
       
       // Logout user
       localStorage.removeItem('accessToken');
       localStorage.removeItem('user');
       window.dispatchEvent(new CustomEvent('auth-change', { detail: { user: null } }));
       navigate('/');
+      
     } catch (err) {
-      setError('Failed to delete account. Please try again.');
+      console.error('Delete account error:', err);
+      setError(err.message || 'Failed to delete account. Please try again.');
     } finally {
       setIsLoading(false);
       setShowDeleteModal(false);
@@ -231,6 +288,20 @@ const Profile = () => {
     navigate('/');
   };
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount || 0);
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  // Loading state
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-blue-50">
@@ -241,18 +312,6 @@ const Profile = () => {
       </div>
     );
   }
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount);
-  };
-
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
 
   return (
     <div className="min-h-screen bg-blue-50 py-8 px-4">
@@ -265,12 +324,12 @@ const Profile = () => {
                 {avatarPreview ? (
                   <img 
                     src={avatarPreview} 
-                    alt={user.full_name} 
+                    alt={user.full_name || 'Profile'} 
                     className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
                   />
                 ) : (
                   <div className="bg-blue-100 text-blue-800 w-32 h-32 rounded-full flex items-center justify-center text-4xl font-bold border-4 border-white shadow-lg">
-                    {user.full_name.charAt(0)}
+                    {(user.full_name || 'U').charAt(0).toUpperCase()}
                   </div>
                 )}
                 <label 
@@ -292,7 +351,7 @@ const Profile = () => {
               </div>
               
               <div className="text-center md:text-left flex-1">
-                <h1 className="text-3xl font-bold">{user.full_name}</h1>
+                <h1 className="text-3xl font-bold">{user.full_name || 'User'}</h1>
                 <div className="mt-2 flex items-center justify-center md:justify-start">
                   <Mail className="h-5 w-5 mr-2" />
                   <span>{user.email}</span>
@@ -312,7 +371,7 @@ const Profile = () => {
                     </a>
                   )}
                   {user.twitter && (
-                    <a href={`https://twitter.com/${user.twitter}`} target="_blank" rel="noopener noreferrer" className="flex items-center bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm">
+                    <a href={`https://twitter.com/${user.twitter.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm">
                       <Twitter className="h-4 w-4 mr-1" />
                       Twitter
                     </a>
@@ -330,7 +389,7 @@ const Profile = () => {
                     </a>
                   )}
                   {user.instagram && (
-                    <a href={`https://instagram.com/${user.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm">
+                    <a href={`https://instagram.com/${user.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm">
                       <Instagram className="h-4 w-4 mr-1" />
                       Instagram
                     </a>
@@ -345,7 +404,7 @@ const Profile = () => {
         <div className="flex flex-wrap gap-2 mb-6">
           <button
             onClick={() => setActiveTab('personal')}
-            className={`px-4 py-2 rounded-lg font-medium ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               activeTab === 'personal' 
                 ? 'bg-blue-600 text-white' 
                 : 'bg-white text-blue-800 hover:bg-blue-50'
@@ -355,7 +414,7 @@ const Profile = () => {
           </button>
           <button
             onClick={() => setActiveTab('donations')}
-            className={`px-4 py-2 rounded-lg font-medium ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               activeTab === 'donations' 
                 ? 'bg-blue-600 text-white' 
                 : 'bg-white text-blue-800 hover:bg-blue-50'
@@ -365,7 +424,7 @@ const Profile = () => {
           </button>
           <button
             onClick={() => setActiveTab('security')}
-            className={`px-4 py-2 rounded-lg font-medium ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               activeTab === 'security' 
                 ? 'bg-blue-600 text-white' 
                 : 'bg-white text-blue-800 hover:bg-blue-50'
@@ -375,7 +434,7 @@ const Profile = () => {
           </button>
           <button
             onClick={() => setActiveTab('account')}
-            className={`px-4 py-2 rounded-lg font-medium ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               activeTab === 'account' 
                 ? 'bg-blue-600 text-white' 
                 : 'bg-white text-blue-800 hover:bg-blue-50'
@@ -609,7 +668,7 @@ const Profile = () => {
                   type="submit"
                   disabled={isLoading}
                   className={`px-6 py-3 font-semibold text-white rounded-lg transition-colors ${
-                    isLoading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                    isLoading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
                   }`}
                 >
                   {isLoading ? 'Saving...' : 'Save Changes'}
@@ -640,7 +699,7 @@ const Profile = () => {
                       <h3 className="text-xl font-semibold text-blue-900">Donation Count</h3>
                     </div>
                     <p className="text-3xl font-bold text-blue-800">
-                      {donationStats.donation_count}
+                      {donationStats.donation_count || 0}
                     </p>
                   </div>
                   
@@ -650,7 +709,7 @@ const Profile = () => {
                       <h3 className="text-xl font-semibold text-blue-900">Top Category</h3>
                     </div>
                     <p className="text-xl font-bold text-blue-800 mb-1">
-                      {donationStats.top_category}
+                      {donationStats.top_category || 'N/A'}
                     </p>
                     <p className="text-blue-700">
                       {formatCurrency(donationStats.top_category_amount)}
@@ -683,13 +742,17 @@ const Profile = () => {
                                   className="w-16 h-16 rounded-lg object-cover mr-4"
                                 />
                               ) : (
-                                <div className="bg-blue-200 w-16 h-16 rounded-lg mr-4"></div>
+                                <div className="bg-blue-200 w-16 h-16 rounded-lg mr-4 flex items-center justify-center">
+                                  <CreditCard className="h-8 w-8 text-blue-600" />
+                                </div>
                               )}
                               <div>
                                 <div className="font-medium text-blue-900">{donation.title}</div>
-                                <div className="text-blue-700 text-sm mt-1 line-clamp-1">
-                                  {donation.description}
-                                </div>
+                                {donation.description && (
+                                  <div className="text-blue-700 text-sm mt-1 line-clamp-1">
+                                    {donation.description}
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </td>
@@ -725,7 +788,7 @@ const Profile = () => {
               <div className="mt-8 flex justify-end">
                 <button
                   onClick={() => navigate('/donation-history')}
-                  className="flex items-center text-blue-600 hover:text-blue-800 font-medium"
+                  className="flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
                 >
                   View Full Donation History
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -811,7 +874,7 @@ const Profile = () => {
                   type="submit"
                   disabled={isLoading}
                   className={`px-6 py-3 font-semibold text-white rounded-lg transition-colors ${
-                    isLoading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                    isLoading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
                   }`}
                 >
                   {isLoading ? 'Updating...' : 'Update Password'}
@@ -855,6 +918,24 @@ const Profile = () => {
                   </div>
                 </div>
                 
+                <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-xl">
+                  <h3 className="text-xl font-semibold text-yellow-900 mb-4 flex items-center">
+                    <LogOut className="h-6 w-6 mr-2" />
+                    Logout
+                  </h3>
+                  
+                  <p className="text-yellow-700 mb-4">
+                    Sign out of your account on this device.
+                  </p>
+                  
+                  <button
+                    onClick={handleLogout}
+                    className="px-6 py-3 font-semibold text-white bg-yellow-600 hover:bg-yellow-700 rounded-lg transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+                
                 <div className="bg-red-50 border border-red-200 p-6 rounded-xl">
                   <h3 className="text-xl font-semibold text-red-900 mb-4 flex items-center">
                     <Trash2 className="h-6 w-6 mr-2" />
@@ -893,6 +974,7 @@ const Profile = () => {
               <div className="flex justify-center space-x-4">
                 <button
                   onClick={() => setShowDeleteModal(false)}
+                  disabled={isLoading}
                   className="px-6 py-3 font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
                 >
                   Cancel
@@ -901,7 +983,7 @@ const Profile = () => {
                   onClick={handleDeleteAccount}
                   disabled={isLoading}
                   className={`px-6 py-3 font-semibold text-white rounded-lg transition-colors ${
-                    isLoading ? 'bg-red-400' : 'bg-red-600 hover:bg-red-700'
+                    isLoading ? 'bg-red-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'
                   }`}
                 >
                   {isLoading ? 'Deleting...' : 'Delete Account'}

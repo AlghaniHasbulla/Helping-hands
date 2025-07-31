@@ -49,6 +49,10 @@ class ProfileResource(Resource):
                 "description": description,
                 "image_url": image_url
             })
+        import sys
+        print("User object fields:", file=sys.stderr)
+        print(user.__dict__, file=sys.stderr)
+
         
         return {
             "id": user.id,
@@ -57,7 +61,7 @@ class ProfileResource(Resource):
             "role": user.role,
             "avatar_url": user.avatar_url,
             "is_verified": user.is_verified,
-            "created_at": user.created_at.isoformat(),
+            "created_at": user.created_at.isoformat() if user.created_at else None,
             "phone": user.phone,
             "address": user.address,
             "city": user.city,

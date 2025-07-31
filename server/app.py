@@ -61,29 +61,29 @@ def create_app(testing=False):
         upgrade()
         seed()
 
-    # Enhanced OPTIONS preflight handler
-    @app.before_request
-    def handle_preflight():
-        if request.method == "OPTIONS":
-            response = jsonify({'status': 'OK'})
-            origin = request.headers.get('Origin')
-            if origin in allowed_origins:
-                response.headers.add("Access-Control-Allow-Origin", origin)
-                response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization,X-Requested-With,Accept")
-                response.headers.add('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS,PATCH")
-                response.headers.add('Access-Control-Allow-Credentials', 'true')
-            return response, 200
+    # # Enhanced OPTIONS preflight handler
+    # @app.before_request
+    # def handle_preflight():
+    #     if request.method == "OPTIONS":
+    #         response = jsonify({'status': 'OK'})
+    #         origin = request.headers.get('Origin')
+    #         if origin in allowed_origins:
+    #             response.headers.add("Access-Control-Allow-Origin", origin)
+    #             response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization,X-Requested-With,Accept")
+    #             response.headers.add('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS,PATCH")
+    #             response.headers.add('Access-Control-Allow-Credentials', 'true')
+    #         return response, 200
 
     # Add CORS headers to all responses
-    @app.after_request
-    def after_request(response):
-        origin = request.headers.get('Origin')
-        if origin in allowed_origins:
-            response.headers.add('Access-Control-Allow-Origin', origin)
-            response.headers.add('Access-Control-Allow-Credentials', 'true')
-            response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept')
-            response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH')
-        return response
+    # @app.after_request
+    # def after_request(response):
+    #     origin = request.headers.get('Origin')
+    #     if origin in allowed_origins:
+    #         response.headers.add('Access-Control-Allow-Origin', origin)
+    #         response.headers.add('Access-Control-Allow-Credentials', 'true')
+    #         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept')
+    #         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH')
+    #     return response
 
     @app.route('/')
     def home():

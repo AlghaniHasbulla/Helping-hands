@@ -56,10 +56,10 @@ def create_app(testing=False):
     logger = logging.getLogger(__name__)
     swagger = Swagger(app)
 
-    # with app.app_context():
-    #     from flask_migrate import upgrade
-    #     upgrade()
-    #     seed()
+    with app.app_context():
+        from flask_migrate import upgrade
+        upgrade()
+        seed()
 
     @app.route('/')
     def home():

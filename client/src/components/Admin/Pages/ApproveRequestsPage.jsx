@@ -37,7 +37,7 @@ const ApproveRequestsPage = () => {
       setIsLoading(true);
       try {
         
-        await api.patch(`/requests/${requestId}`, { is_approved: true });
+        await api.patch(`/admin/requests/${requestId}/approve`, { is_approved: true });
         toast.success(`Request #${requestId} approved successfully!`);
         fetchDonationRequests();
       } catch (e) {
@@ -54,8 +54,8 @@ const ApproveRequestsPage = () => {
     if (window.confirm('Are you sure you want to reject this request?')) {
       setIsLoading(true);
       try {
-    
-        await api.patch(`/requests/${requestId}`, { is_approved: false });
+       
+        await api.patch(`/admin/requests/${requestId}/approve`, { is_approved: false });
         toast.info(`Request #${requestId} has been rejected.`);
         fetchDonationRequests(); 
       } catch (e) {

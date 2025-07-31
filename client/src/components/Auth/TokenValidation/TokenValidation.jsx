@@ -42,7 +42,7 @@ const TokenValidation = () => {
       if (response.status === 200) {
         localStorage.setItem('accessToken', response.data.access_token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        navigate('/dashboard');
+        navigate('/profile');
       }
     } catch (err) {
       setError(err.response?.data?.error || 'Verification failed. Please try again.');
@@ -69,7 +69,7 @@ const TokenValidation = () => {
         // Dispatch authentication event
         dispatchAuthEvent(response.data.user);
         
-        navigate('/dashboard');
+        navigate('/profile');
       }
     } catch (err) {
       setError(err.response?.data?.error || 'Invalid verification code');

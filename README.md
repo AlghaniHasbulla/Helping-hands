@@ -71,7 +71,7 @@ Built as a team project with a clean split between frontend and backend responsi
 - **Database**: PostgreSQL (with SQLAlchemy ORM)
 - **Authentication**: JWT (Flask-JWT-Extended)
 - **APIs**: Flask-RESTful
-- **Email**: SendGrid
+- **Email**: Brevo
 - **Images**: Cloudinary
 - **Docs**: Swagger (OpenAPI 3.0)
 

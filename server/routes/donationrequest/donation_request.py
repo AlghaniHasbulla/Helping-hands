@@ -67,8 +67,11 @@ class DonationRequestListResource(Resource):
                 item['status'] = 'Unknown'
 
             # Add ngoName field
-            ngo = User.query.get(item.get('ngo_id'))
-            item['ngoName'] = ngo.name if ngo else 'N/A'
+            try:
+                ngo = User.query.get(item.get('ngo_id'))
+                item['ngoName'] = ngo.name if ngo else 'N/A'
+            except Exception as e:
+                item['ngoName'] = 'N/A'
 
         paginated['items'] = items
 

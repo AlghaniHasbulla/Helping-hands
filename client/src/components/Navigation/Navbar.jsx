@@ -96,6 +96,15 @@ const Navbar = () => {
           <Link to="/events" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent" onClick={() => setIsMenuOpen(false)}>Events</Link>
           <Link to="/about" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent" onClick={() => setIsMenuOpen(false)}>About</Link>
           <Link to="/contacts" className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+          {user && user.role === 'ngo' && (
+            <Link
+              to="/ngo-requests"
+              className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              My Requests
+            </Link>
+          )}
         </div>
       </div>
 

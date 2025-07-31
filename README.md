@@ -12,11 +12,13 @@ Built as a team project with a clean split between frontend and backend responsi
 
 | Member | Role | Key Contributions |
 |-------|------|------------------|
+| **Isaac** | Backend | Donation request APIs, email verification (Brevo) admin approval flow, pagination, Swagger docs |
+| **George** | Backend | User models, JWT authentication, profile APIs, Cloudinary backend, category management|
 | **Brian** | Frontend | Authentication UI, Role-based routing, JWT session persistence, Redux Auth Slice |
 | **Adrian** | Frontend | Donation request forms, donor dashboard, donation history, pagination, Redux Donations Slice |
 | **Cornelius** | Frontend | Admin dashboard, category management, Cloudinary image upload UI, Recharts integration |
-| **George** | Backend | User models, JWT authentication, email verification (SendGrid), profile APIs, Cloudinary backend |
-| **Isaac** | Backend | Donation request APIs, admin approval flow, category management, pagination, Swagger docs |
+
+
 
 ---
 

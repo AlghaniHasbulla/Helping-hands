@@ -93,7 +93,7 @@ class EventCreate(Resource):
         user_id = get_jwt_identity()
         user = User.query.get_or_404(user_id)
 
-        if user.role not in ['admin', 'super_admin']:
+        if user.role not in ['admin', 'super_admin', 'ngo']:
             return {"error": "Unauthorized"}, 403
 
         data = request.get_json()

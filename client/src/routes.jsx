@@ -11,6 +11,7 @@ import DonationHistory from './components/Donations/DonationHistory';
 import Home from './components/Home/Home';
 import Causes from './components/Causes/Causes';
 import Events from './components/Events/Events';
+import EventCreate from './components/Events/EventCreate';
 import About from './components/About/About';
 import Contacts from './components/Contacts/Contacts';
 import Profile from './components/Profile/Profile';
@@ -34,6 +35,14 @@ const AppRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/causes" element={<Causes />} />
       <Route path="/events" element={<Events />} />
+      <Route
+        path="/events/create"
+        element={
+          <PrivateRoute allowedRoles={['ngo', 'admin', 'super_admin']}>
+            <EventCreate />
+          </PrivateRoute>
+        }
+      />
       <Route path="/about" element={<About />} />
       <Route path="/contacts" element={<Contacts />} />
       <Route path="/Sign-In" element={<SignIn />} />

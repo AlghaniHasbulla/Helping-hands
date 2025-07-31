@@ -11,7 +11,7 @@ api = Api(admin_bp)
 
 def is_admin(user_id):
     user = User.query.get(user_id)
-    return user and user.role == 'admin'
+    return user and user.role in ['admin', 'superadmin']
 
 class CategoryListResource(Resource):
     @jwt_required()

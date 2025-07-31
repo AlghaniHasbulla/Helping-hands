@@ -11,9 +11,8 @@ const ProfileDropdown = ({ user }) => {
 
   useEffect(() => {
     const userAvatarUrl = user?.avatar_url;
-    console.log('ProfileDropdown: User avatar URL:', userAvatarUrl);
     setAvatarUrl(userAvatarUrl || null);
-    setImageError(false); // Reset error state when avatar URL changes
+    setImageError(false);
   }, [user]);
 
   const handleLogout = () => {
@@ -25,7 +24,6 @@ const ProfileDropdown = ({ user }) => {
   };
 
   const handleImageError = () => {
-    console.log('ProfileDropdown: Image failed to load:', avatarUrl);
     setImageError(true);
   };
 
@@ -37,11 +35,9 @@ const ProfileDropdown = ({ user }) => {
           alt={user?.full_name || "User"} 
           className="w-9 h-9 rounded-full object-cover border-2 border-blue-200"
           onError={handleImageError}
-          onLoad={() => console.log('ProfileDropdown: Image loaded successfully:', avatarUrl)}
         />
       );
     } else {
-      // Fallback to initials
       const initials = user?.full_name ? user.full_name.charAt(0).toUpperCase() : "U";
       return (
         <div className="bg-blue-100 text-blue-800 w-9 h-9 rounded-full flex items-center justify-center font-medium">
@@ -50,6 +46,20 @@ const ProfileDropdown = ({ user }) => {
       );
     }
   };
+
+  // Determine link and label based on role
+  const getRoleLink = () => {
+    switch (user?.role) {
+      case 'ngo':
+        return { path: '/ngo-dashboard', label: 'NGO Dashboard' };
+      case 'admin':
+        return { path: '/admin', label: 'Admin Dashboard' };
+      default:
+        return { path: '/profile', label: 'My Profile' };
+    }
+  };
+
+  const { path, label } = getRoleLink();
 
   return (
     <div className="relative">
@@ -75,12 +85,12 @@ const ProfileDropdown = ({ user }) => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-20 border border-blue-100">
           <Link 
-            to="/profile" 
+            to={path} 
             className="flex items-center px-4 py-3 text-blue-800 hover:bg-blue-50 rounded-t-lg"
             onClick={() => setIsOpen(false)}
           >
             <User className="h-5 w-5 mr-2 text-blue-600" />
-            <span>My Profile</span>
+            <span>{label}</span>
           </Link>
           <button
             onClick={handleLogout}

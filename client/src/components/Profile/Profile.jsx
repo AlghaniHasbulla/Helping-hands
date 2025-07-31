@@ -350,52 +350,51 @@ const Profile = () => {
                 />
               </div>
               
-              <div className="text-center md:text-left flex-1">
-                <h1 className="text-3xl font-bold">{user.full_name || 'User'}</h1>
-                <div className="mt-2 flex items-center justify-center md:justify-start">
-                  <Mail className="h-5 w-5 mr-2" />
-                  <span>{user.email}</span>
+              <div className="flex-1 w-full">
+                <h1 className="text-3xl font-bold mb-2 text-center md:text-left">{user.full_name || 'User'}</h1>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-sm text-blue-100">
+                  <div className="flex items-center">
+                    <Mail className="h-5 w-5 mr-2 text-white" />
+                    <span>{user.email}</span>
+                  </div>
+
+                  {user.phone && (
+                    <div className="flex items-center">
+                      <Phone className="h-5 w-5 mr-2 text-white" />
+                      <span>{user.phone}</span>
+                    </div>
+                  )}
+
+                  {(user.city || user.country) && (
+                    <div className="flex items-center">
+                      <MapPin className="h-5 w-5 mr-2 text-white" />
+                      <span>{user.city}, {user.country}</span>
+                    </div>
+                  )}
+
+                  {user.address && (
+                    <div className="flex items-center">
+                      <Home className="h-5 w-5 mr-2 text-white" />
+                      <span>{user.address}</span>
+                    </div>
+                  )}
+
+                  {user.bio && (
+                    <div className="md:col-span-2 flex items-start">
+                      <BookOpen className="h-5 w-5 mr-2 mt-0.5 text-white" />
+                      <p>{user.bio}</p>
+                    </div>
+                  )}
                 </div>
-                
+
                 {user.role && (
-                  <div className="mt-3 inline-block bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                  <div className="mt-4 inline-block bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
                     {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                   </div>
                 )}
-                
-                <div className="mt-4 flex flex-wrap justify-center md:justify-start gap-2">
-                  {user.website && (
-                    <a href={user.website} target="_blank" rel="noopener noreferrer" className="flex items-center bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm">
-                      <Globe className="h-4 w-4 mr-1" />
-                      Website
-                    </a>
-                  )}
-                  {user.twitter && (
-                    <a href={`https://twitter.com/${user.twitter.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm">
-                      <Twitter className="h-4 w-4 mr-1" />
-                      Twitter
-                    </a>
-                  )}
-                  {user.facebook && (
-                    <a href={`https://facebook.com/${user.facebook}`} target="_blank" rel="noopener noreferrer" className="flex items-center bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm">
-                      <Facebook className="h-4 w-4 mr-1" />
-                      Facebook
-                    </a>
-                  )}
-                  {user.linkedin && (
-                    <a href={`https://linkedin.com/in/${user.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm">
-                      <Linkedin className="h-4 w-4 mr-1" />
-                      LinkedIn
-                    </a>
-                  )}
-                  {user.instagram && (
-                    <a href={`https://instagram.com/${user.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm">
-                      <Instagram className="h-4 w-4 mr-1" />
-                      Instagram
-                    </a>
-                  )}
-                </div>
               </div>
+
             </div>
           </div>
         </div>

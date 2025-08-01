@@ -40,7 +40,7 @@ class ProfileResource(Resource):
                         .all()
         
         donation_history = []
-        for donation, title, description, image_url in donations:
+        for donation, title, description in donations:
             donation_history.append({
                 "id": donation.id,
                 "amount": donation.amount,

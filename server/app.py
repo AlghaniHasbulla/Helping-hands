@@ -19,7 +19,7 @@ def create_app(testing=False):
     allowed_origins = [
         "http://localhost:5173",
         "http://localhost:3000",
-        "https://helpinghands-ruddy.vercel.app"
+        "https://helping-hands-r5n8.vercel.app/"
     ]
 
     CORS(app,

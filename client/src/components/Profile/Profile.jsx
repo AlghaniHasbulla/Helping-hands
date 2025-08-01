@@ -86,8 +86,8 @@ const Profile = () => {
         return;
       }
 
-      console.log('Making request to:', `${BASE_URL}/profile`);
-      const response = await fetch(`${BASE_URL}/profile`, {
+      console.log('Making request to:', 'https://helping-hands-backend-w4pu.onrender.com/profile');
+      const response = await fetch('https://helping-hands-backend-w4pu.onrender.com/profile', {
         method: 'GET',
         headers: getAuthHeaders()
       });
@@ -130,7 +130,7 @@ const Profile = () => {
       const token = localStorage.getItem('accessToken');
       if (!token) return;
 
-      const response = await fetch(`${BASE_URL}/donations/stats`, {
+      const response = await fetch('https://helping-hands-backend-w4pu.onrender.com/donations/stats', {
         method: 'GET',
         headers: getAuthHeaders()
       });
@@ -216,7 +216,7 @@ const Profile = () => {
         formDataToSend.append('avatar', avatar);
       }
 
-      const response = await fetch(`${BASE_URL}/profile`, {
+      const response = await fetch('https://helping-hands-backend-w4pu.onrender.com/profile', {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -232,7 +232,7 @@ const Profile = () => {
       await fetchProfile();
       
       // Update localStorage and trigger auth change event
-      const updatedUser = await fetch(`${BASE_URL}/profile`, {
+      const updatedUser = await fetch('https://helping-hands-backend-w4pu.onrender.com/profile', {
         method: 'GET',
         headers: getAuthHeaders()
       }).then(handleResponse);
@@ -259,7 +259,7 @@ const Profile = () => {
         return;
       }
 
-      const response = await fetch(`${BASE_URL}/profile/delete`, {
+      const response = await fetch('https://helping-hands-backend-w4pu.onrender.com/profile/delete', {
         method: 'DELETE',
         headers: getAuthHeaders()
       });

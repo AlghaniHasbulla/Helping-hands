@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '@/assets/helpinghandsliogo.jpeg';
 import { dispatchAuthEvent } from '@/lib/utils';
 import ProfileDropdown from '../Profile/ProfileDropdown';
-
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -54,11 +53,17 @@ const Navbar = () => {
     setIsProfileMenuOpen(false);
   };
 
-  // Redirect causes tab for NGO users
+  // Redirect causes tab for NGO users and donors
   const handleCausesClick = (e) => {
-    if (user && user.role === 'ngo') {
+    if (user) {
       e.preventDefault();
-      navigate('/ngo-causes');
+      if (user.role === 'ngo') {
+        navigate('/ngo-causes');
+      } else if (user.role === 'donor') {
+        navigate('/donor-home');
+      } else {
+        navigate('/causes');
+      }
       setIsMenuOpen(false);
     }
   };
@@ -103,6 +108,15 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               My Requests
+            </Link>
+          )}
+          {user && (user.role === 'admin' || user.role === 'superadmin') && (
+            <Link
+              to="/admin/causes"
+              className="py-2 px-4 hover:text-blue-600 hover:bg-blue-50 rounded md:hover:bg-transparent"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Pending Requests
             </Link>
           )}
         </div>

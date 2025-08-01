@@ -5,7 +5,7 @@ import SignIn from './components/Auth/SignIn/SignIn';
 import TokenValidation from './components/Auth/TokenValidation/TokenValidation';
 import DonationRequestForm from './components/Donations/DonationRequestForm';
 import NGORequestsHistory from './components/Donations/NGORequestsHistory';
-import DonorHome from './components/Donations/DonorHome';
+import DonorCausesPage from './components/Donations/DonorCausesPage';
 import DonationForm from './components/Donations/DonationForm';
 import DonationHistory from './components/Donations/DonationHistory';
 import Home from './components/Home/Home';
@@ -26,7 +26,7 @@ import CategoryManagementPage from './components/Admin/Pages/CategoryManagementP
 import ApproveRequestsPage from './components/Admin/Pages/ApproveRequestsPage';
 import UserManagerPage from './components/Admin/Pages/UserManagerPage';
 import ActionLogViewer from './components/Admin/Pages/ActionLogViewer';
-
+import AdminCausesPage from './components/Admin/Pages/AdminCausesPage';
 
 const AppRoutes = () => {
   return (
@@ -63,6 +63,7 @@ const AppRoutes = () => {
       <Route index element={<DashboardPage />} /> {/* Using DashboardPage */}
       <Route path="categories" element={<CategoryManagementPage />} /> {/* Using CategoryManagementPage */}
       <Route path="requests" element={<ApproveRequestsPage />} /> {/* Using ApproveRequestsPage */}
+      <Route path="causes" element={<AdminCausesPage />} /> {/* New AdminCausesPage */}
 
       <Route
         path="users"
@@ -123,7 +124,7 @@ const AppRoutes = () => {
         path="/donor-home"
         element={
           <PrivateRoute allowedRoles={['donor', 'admin']}>
-            <DonorHome />
+            <DonorCausesPage />
           </PrivateRoute>
         }
       />

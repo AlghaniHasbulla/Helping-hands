@@ -29,20 +29,6 @@ const DonationRequestForm = () => {
     fetchCategories();
   }, []);
 
-  useEffect(() => {
-    if (!createRequestStatus.loading && !createRequestStatus.error) {
-      // Clear form inputs on successful submission
-      setFormData({
-        title: '',
-        description: '',
-        category_id: '',
-        amount_requested: '',
-      });
-      // Navigate to NGORequestsHistory page
-      navigate('/ngo-requests-history');
-    }
-  }, [createRequestStatus, navigate]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -53,7 +39,18 @@ const DonationRequestForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(createDonationRequest(formData));
+    const resultAction = await dispatch(createDonationRequest(formData));
+    if (createDonationRequest.fulfilled.match(resultAction)) {
+      // Clear form inputs
+      setFormData({
+        title: '',
+        description: '',
+        category_id: '',
+        amount_requested: '',
+      });
+      // Navigate to NGORequestsHistory page
+      navigate('/ngo-requests');
+    }
   };
 
   return (

@@ -1,7 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchApprovedRequests, resetApprovalChangeFlag } from '../../store/donationsSlice';
+import { fetchApprovedRequests, resetApprovalChangeFlag, makeDonation } from '../../store/donationsSlice';
 import { useEffect, useState } from 'react';
 import { formatDate } from '../../lib/utils';
+
 
 const categories = [
   { id: '', name: 'All' },
@@ -11,7 +12,7 @@ const categories = [
   { id: '4', name: 'Medical' },
 ];
 
-const DonorHome = () => {
+const DonorCausesPage = () => {
   const dispatch = useDispatch();
   const approvedRequests = useSelector(state => state.donations.approvedRequests) || { items: [], total: 0 };
   const approvalChangeFlag = useSelector(state => state.donations.approvalChangeFlag);
@@ -89,7 +90,13 @@ const DonorHome = () => {
         </div>
 
         {approvedRequests.loading && <p>Loading...</p>}
-        {approvedRequests.error && <p className="text-red-600">{approvedRequests.error}</p>}
+        {approvedRequests.error && (
+          <p className="text-red-600">
+            {typeof approvedRequests.error === 'string'
+              ? approvedRequests.error
+              : approvedRequests.error.msg || JSON.stringify(approvedRequests.error)}
+          </p>
+        )}
         {!approvedRequests.loading && filteredRequests.length === 0 && <p>No donation requests found.</p>}
 
         <ul className="space-y-4">
@@ -173,4 +180,4 @@ const DonorHome = () => {
   );
 };
 
-export default DonorHome;
+export default DonorCausesPage;

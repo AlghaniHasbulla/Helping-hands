@@ -5,7 +5,7 @@ export const fetchApprovedRequests = createAsyncThunk(
   'donations/fetchApprovedRequests',
   async ({ page = 1, limit = 10 }, thunkAPI) => {
     try {
-      const response = await api.get(`/requests?page=${page}&limit=${limit}`);
+      const response = await api.get(`/requests?is_approved=true&page=${page}&limit=${limit}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -81,8 +81,15 @@ const donationsSlice = createSlice({
     donationHistory: { items: [], total: 0, page: 1, limit: 10, loading: false, error: null },
     createRequestStatus: { loading: false, error: null },
     makeDonationStatus: { loading: false, error: null },
+    approvalChangeFlag: false,
   },
   reducers: {
+    resetApprovalChangeFlag(state) {
+      state.approvalChangeFlag = false;
+    },
+    setApprovalChangeFlag(state) {
+      state.approvalChangeFlag = true;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -166,5 +173,7 @@ const donationsSlice = createSlice({
       });
   }
 });
+
+export const { resetApprovalChangeFlag, setApprovalChangeFlag } = donationsSlice.actions;
 
 export default donationsSlice.reducer;

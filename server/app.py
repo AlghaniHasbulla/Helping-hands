@@ -22,6 +22,7 @@ def create_app(testing=False):
         "https://helping-hands-r5n8.vercel.app/"
     ]
 
+
     CORS(app,
          origins=allowed_origins,
          supports_credentials=True,
